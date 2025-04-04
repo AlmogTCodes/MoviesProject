@@ -3,10 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
+    <style>
+        #loadedMovies {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .Movie {
+            border: 1px solid black;
+            width: 20rem;
+        }
+
+        img{
+            height:100%;
+            width:20rem;
+            object-fit: cover;
+        }
+    </style>
+
     <title>My Movies</title>
-    
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous">
     </script>
@@ -23,7 +44,17 @@
     </script>
 </head>
 <body>
+    <h1>Movies</h1>
+    <!-- 
 
+        Need to add Navigation bar
+
+    -->
     <button id="loadMoviesBTN"> Load Movies </button>
+    <div id="loadedMovies">
+        <!-- Movie Divs will be inserted Dynamically -->
+    </div>
+
+    <script src="./JS/clientMethods.js"></script>
 </body>
 </html>

@@ -11443,5 +11443,3 @@ const movies = [
       "numVotes": 99362
     }
   ];
-
-  export default movies;
