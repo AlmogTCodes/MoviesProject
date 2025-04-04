@@ -1,0 +1,55 @@
+# === General ===
+*.log
+*.tmp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+
+# === Backend (hw2 - ASP.NET Core) ===
+hw2/bin/
+hw2/obj/
+hw2/.vs/
+hw2/*.user
+hw2/*.csproj.user
+hw2/*.suo
+hw2/*.userosscache
+hw2/*.sln.docstates
+hw2/Properties/launchSettings.json
+hw2/TestResults/
+
+# Include essential config (excluding secrets)
+!hw2/appsettings.json
+hw2/appsettings.Development.json  # contains secrets, do not include
+
+# === Frontend (hw_2_web - static or JS framework) ===
+hw_2_web/node_modules/
+hw_2_web/dist/
+hw_2_web/build/
+hw_2_web/.env
+hw_2_web/*.log
+
+# === Visual Studio IDE settings ===
+.vscode/
+.idea/
+*.vspscc
+*.vssscc
+*.pdb
+*.cache
+*.dbmdl
+*.bak
+*.psess
+*.vsp
+*.scc
+*.suo
+*.ntvs_analysis.dat
+*.njsproj.user
+*.vcxproj.user
+*.vcxproj.filters
+
+# === Rider (optional) ===
+.idea/
+
+# === Publish output ===
+**/publish/
+**/artifacts/
