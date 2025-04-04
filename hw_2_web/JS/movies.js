@@ -1,4 +1,4 @@
-const movies = [
+export const movies = [
     {
       "id": "tt0111161",
       "url": "https://www.imdb.com/title/tt0111161/",
@@ -11442,5 +11442,4 @@ const movies = [
       "averageRating": 8.2,
       "numVotes": 99362
     }
-  ]
-console.log(movies)
+  ];

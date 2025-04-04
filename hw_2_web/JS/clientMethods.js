@@ -1,3 +1,5 @@
+import
+
 // Function to load movies
 function loadMovies() {
     console.log("Loading movies...");
