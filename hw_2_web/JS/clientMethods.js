@@ -1,4 +1,4 @@
-import
+import movies from './movies-db.js';
 
 // Function to load movies
 function loadMovies() {
