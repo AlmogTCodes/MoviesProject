@@ -1,11 +1,10 @@
+const port = 5093;
+const postUrl = `http://localhost:${port}/api/Movie`;
 $(document).ready(init);
 
 function init()
 {
     let isLoaded = false;
-    
-    const port = 5093;
-    const postUrl = `http://localhost:${port}/api/Movie`;
 
     $("#loadMoviesBTN").click(function(){
         if(isLoaded){
@@ -101,6 +100,7 @@ function renderMovie(filteredMovieData) {
     const addToCartBTN = $(`<button class="addToCartBTN">Add to Cart</button>`);
     addToCartBTN.click(() => {
         console.log(`Button has been pressed, parent is: ${Id}`);
+        console.log(filteredMovieData);
         sendToServer(filteredMovieData);
     });
     
