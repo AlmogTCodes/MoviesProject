@@ -113,20 +113,3 @@ function renderMovie(filteredMovieData) {
     lowerDiv.append(titleDiv, yearDiv, runtimeDiv, descriptionDiv);
 
 }
-
-// let id = movie.id; // should be the id of the WHOLE div to find it easily
-                
-// let url = movie.url;    //Clicking on Rating will forward to this
-// let primaryTitle = movie.primaryTitle;  //Movie Title h3 div?
-// let description = movie.description;    //Movie Description maybe add hide/show css class
-// let primaryImage = movie.primaryImage;  //Movie Poster image
-// let year = movie.startYear;     //Release Year of the movie
-// let releaseDate = new Date(movie.releaseDate);  //Exact date been released with yyyy-mm-dd format
-// let language = movie.language;
-// let budget = movie.budget;
-// let grossWorldwide = movie.grossWorldwide;
-// let genres = movie.genres[0];//ITS AN ARRAY SO CHOOSING THE FIRST ONE cause genres in C# IS A STRING!
-// let isAdult = movie.isAdult;
-// let runtimeMinutes = movie.runtimeMinutes;
-// let averageRating = movie.averageRating;
-// let numVotes = movie.numVotes;
