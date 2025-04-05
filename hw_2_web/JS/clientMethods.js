@@ -3,6 +3,10 @@ $(document).ready(init);
 function init()
 {
     let isLoaded = false;
+    
+    const port = 5093;
+    const postUrl = `http://localhost:${port}/api/Movie`;
+
     $("#loadMoviesBTN").click(function(){
         if(isLoaded){
             alert("Movies has been loaded");
@@ -96,7 +100,8 @@ function renderMovie(filteredMovieData) {
 
     const addToCartBTN = $(`<button class="addToCartBTN">Add to Cart</button>`);
     addToCartBTN.click(() => {
-        alert(`Button has been pressed, parent is: ${Id}`);
+        console.log(`Button has been pressed, parent is: ${Id}`);
+        sendToServer(filteredMovieData);
     });
     
     const ratingDiv = $(`<div class="rating">${AverageRating}</div>`);
@@ -112,4 +117,31 @@ function renderMovie(filteredMovieData) {
 
     lowerDiv.append(titleDiv, yearDiv, runtimeDiv, descriptionDiv);
 
+}
+
+function ajaxCall(method, api, data, successCB, errorCB) {
+    $.ajax({
+        type: method,
+        url: api,
+        data: data,
+        cache: false,
+        contentType: "application/json",
+        dataType: "json",
+        success: successCB,
+        error: errorCB
+    });
+}
+
+function insertSCB(res)
+{
+    console.log(res);
+}
+
+function insertECB(err)
+{
+    console.log(err);
+}
+
+function sendToServer(movieToServer){
+    ajaxCall("POST", postUrl, JSON.stringify(movieToServer), insertSCB, insertECB);
 }
