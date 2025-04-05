@@ -148,7 +148,12 @@ function insertSCB(res, id)
 {
     if(res)
     {
-        $(`#${id}`).addClass("success");
+        const movieDiv = $(`#${id}`);
+        movieDiv.addClass("success");
+        
+        movieDiv.find(".addToCartBTN")
+                .text("Added")
+                .prop("disabled", true); // Update button text and disable it
     }
     console.log(`Inserted: ${res}`);
 }
