@@ -45,7 +45,7 @@ function extractNumbersFromString(str)
     let onlyNumbers = "";
     for(let char of str)
     {
-        if (char >= '0' || char <= '9')
+        if (char >= '0' && char <= '9')
         {
             onlyNumbers += char;
         }
@@ -68,6 +68,7 @@ function createServerMovie(movieData) {
     }
 
     const movieIdOnlyNumbers = extractNumbersFromString(movieData.id);
+    console.log(movieIdOnlyNumbers);
 
     return {
         Id: movieIdOnlyNumbers,
@@ -148,12 +149,12 @@ function ajaxCall(method, api, data, successCB, errorCB) {
 
 function insertSCB(res)
 {
-    console.log(res);
+    console.log(`Inserted: ${res}`);
 }
 
 function insertECB(err)
 {
-    console.error(err);
+    console.error(`Error: ${err}`);
 }
 
 function sendToServer(movieToServer)
