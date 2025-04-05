@@ -40,6 +40,19 @@ function loadMovies() {
     });
 }
 
+function extractNumbersFromString(str)
+{
+    let onlyNumbers = "";
+    for(let char of str)
+    {
+        if (char >= '0' || char <= '9')
+        {
+            onlyNumbers += char;
+        }
+    }
+    return onlyNumbers;
+}
+
 function createServerMovie(movieData) {
     const requiredFields = [
         "id",
@@ -53,9 +66,11 @@ function createServerMovie(movieData) {
             return; // Stop early if any field is missing
         }
     }
-    
+
+    const movieIdOnlyNumbers = extractNumbersFromString(movieData.id);
+
     return {
-        Id: movieData.id,
+        Id: movieIdOnlyNumbers,
         Url: movieData.url,
         PrimaryTitle: movieData.primaryTitle,
         Description: movieData.description,
@@ -100,7 +115,6 @@ function renderMovie(filteredMovieData) {
     const addToCartBTN = $(`<button class="addToCartBTN">Add to Cart</button>`);
     addToCartBTN.click(() => {
         console.log(`Button has been pressed, parent is: ${Id}`);
-        console.log(filteredMovieData);
         sendToServer(filteredMovieData);
     });
     
@@ -139,9 +153,10 @@ function insertSCB(res)
 
 function insertECB(err)
 {
-    console.log(err);
+    console.error(err);
 }
 
-function sendToServer(movieToServer){
+function sendToServer(movieToServer)
+{
     ajaxCall("POST", postUrl, JSON.stringify(movieToServer), insertSCB, insertECB);
 }
