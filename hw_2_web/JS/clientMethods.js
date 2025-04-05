@@ -24,8 +24,6 @@ function loadMovies() {
         
         if(textStatus === "success" && typeof movies !== "undefined") {
             
-            console.log("Movies data loaded successfully.", movies);
-            
             movies.forEach(movie =>{
 
                 const newMovie = createServerMovie(movie);
@@ -68,7 +66,6 @@ function createServerMovie(movieData) {
     }
 
     const movieIdOnlyNumbers = extractNumbersFromString(movieData.id);
-    console.log(movieIdOnlyNumbers);
 
     return {
         Id: movieIdOnlyNumbers,
@@ -147,8 +144,12 @@ function ajaxCall(method, api, data, successCB, errorCB) {
     });
 }
 
-function insertSCB(res)
+function insertSCB(res, id)
 {
+    if(res)
+    {
+        $(`#${id}`).addClass("success");
+    }
     console.log(`Inserted: ${res}`);
 }
 
@@ -159,5 +160,10 @@ function insertECB(err)
 
 function sendToServer(movieToServer)
 {
-    ajaxCall("POST", postUrl, JSON.stringify(movieToServer), insertSCB, insertECB);
+    ajaxCall(
+        "POST", 
+        postUrl, 
+        JSON.stringify(movieToServer), 
+        (res) => insertSCB(res, movieToServer.Id), 
+        insertECB);
 }
