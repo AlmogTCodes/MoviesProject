@@ -15,8 +15,9 @@ function init()
 
 
 function loadMovies() {
-        
-    $.getScript("./JS/Movies-db.js", function(data, textStatus, jqxhr) {
+
+    //  data = The string returned from the JSON File file
+    $.getScript("./JS/Movies-db.js", function(data, textStatus) {
         
         if(textStatus === "success" && typeof movies !== "undefined") {
             
@@ -24,52 +25,8 @@ function loadMovies() {
             
             movies.forEach(movie =>{
 
-                let id = movie.id; // should be the id of the WHOLE div to find it easily
-                
-                let url = movie.url;    //Clicking on Rating will forward to this
-                let primaryTitle = movie.primaryTitle;  //Movie Title h3 div?
-                let description = movie.description;    //Movie Description maybe add hide/show css class
-                let primaryImage = movie.primaryImage;  //Movie Poster image
-                let year = movie.startYear;     //Release Year of the movie
-                let releaseDate = new Date(movie.releaseDate);  //Exact date been released with yyyy-mm-dd format
-                let language = movie.language;
-                let budget = movie.budget;
-                let grossWorldwide = movie.grossWorldwide;
-                let genres = movie.genres[0];//ITS AN ARRAY SO CHOOSING THE FIRST ONE cause genres in C# IS A STRING!
-                let isAdult = movie.isAdult;
-                let runtimeMinutes = movie.runtimeMinutes;
-                let averageRating = movie.averageRating;
-                let numVotes = movie.numVotes;
-
-                let movieDiv = $(`<div class= "Movie" id=${id}></div>`);
-                $("#loadedMovies").append(movieDiv);
-
-                let upperDiv = $(`<div class="upperDiv"></<div>`);
-                let lowerDiv = $(`<div class="lowerDiv"></<div>`);
-                movieDiv.append(upperDiv, lowerDiv);
-
-                    //upper should include [
-                    // BTN,
-                let addToCartBTN = $(`<button class="addToCartBTN"> Add to Cart</button>`);
-                    // Rating,
-                let ratingDiv = $(`<div class="rating">${averageRating}</div>`);
-                    // Background image
-                let altImgText = primaryTitle + " " + "movie poster";
-                let imgDiv = $(`<img src="${primaryImage}" alt="${altImgText}"></img>`);
-
-                upperDiv.append(addToCartBTN, ratingDiv, imgDiv);
-
-                    //Lower should include [
-                    // Title, 
-                let titleDiv = $(`<div>"${primaryTitle}"</div>`);
-                    // year, 
-                let yearDiv = $(`<div>"${year}"</div>`);
-                    // runtime, 
-                let runtimeDiv = $(`<div>"${runtimeMinutes}"</div>`);
-                    // description]
-                let descriptionDiv = $(`<div>"${description}"</div>`);
-
-                lowerDiv.append(titleDiv, yearDiv, runtimeDiv, descriptionDiv);
+                const newMovie = createServerMovie(movie);
+                renderMovie(newMovie);
             })
             
             isLoaded = true;
@@ -80,10 +37,96 @@ function loadMovies() {
     });
 }
 
-// function create(movies){
-//     movies.forEach(movie =>{
-//         let movieDiv = $('<div class= "Movie"></div>');
-//         $("loadedMovies").append(movieDiv);
-//         movieDiv.$(<div> Hello</div>);
-//     })
-// }
+function createServerMovie(movieData) {
+    const requiredFields = [
+        "id",
+        "primaryTitle",
+    ];
+    
+    for (let field of requiredFields) {
+        if (movieData[field] === undefined || movieData[field] === null) {
+            console.log(movieData);
+            console.error(`Missing required field: ${field}`);
+            return; // Stop early if any field is missing
+        }
+    }
+    
+    return {
+        Id: movieData.id,
+        Url: movieData.url,
+        PrimaryTitle: movieData.primaryTitle,
+        Description: movieData.description,
+        PrimaryImage: movieData.primaryImage,
+        Year: movieData.startYear,
+        ReleaseDate: movieData.releaseDate,
+        Language: movieData.language,
+        Budget: movieData.budget,
+        GrossWorldwide: movieData.grossWorldwide,
+        Genres: movieData.genres[0],
+        IsAdult: movieData.isAdult,
+        RuntimeMinutes: movieData.runtimeMinutes,
+        AverageRating: movieData.averageRating,
+        NumVotes: movieData.numVotes,
+    };
+}
+
+function renderMovie(filteredMovieData) {
+    
+    if (!filteredMovieData || !filteredMovieData.Id || !filteredMovieData.PrimaryTitle) {
+        $("#loadedMovies").append($(`<div class="Movie error">Unable to load movie</div>`));
+        return;
+    }
+    
+    const { 
+        Id, 
+        PrimaryTitle, 
+        Description = "No description available", // Default value for missing description, 
+        PrimaryImage = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' enable-background='new 0 0 24 24' height='24' viewBox='0 0 24 24' width='24'%3E%3Cg%3E%3Crect fill='none' height='24' width='24'/%3E%3Cpath d='M21.9,21.9l-8.49-8.49l0,0L3.59,3.59l0,0L2.1,2.1L0.69,3.51L3,5.83V19c0,1.1,0.9,2,2,2h13.17l2.31,2.31L21.9,21.9z M5,18 l3.5-4.5l2.5,3.01L12.17,15l3,3H5z M21,18.17L5.83,3H19c1.1,0,2,0.9,2,2V18.17z'/%3E%3C/g%3E%3C/svg%3E", 
+        Year = "Unknown", // Default value for missing year, 
+        RuntimeMinutes = "N/A", // Default value for missing runtime
+        AverageRating = "No rating yet" // Default value for missing rating
+    } = filteredMovieData;
+    
+    const movieDiv = $(`<div class="Movie" id="${Id}"></div>`);
+    $("#loadedMovies").append(movieDiv);
+
+    const upperDiv = $(`<div class="upperDiv"></div>`);
+    const lowerDiv = $(`<div class="lowerDiv"></div>`);
+    movieDiv.append(upperDiv, lowerDiv);
+
+    const addToCartBTN = $(`<button class="addToCartBTN">Add to Cart</button>`);
+    addToCartBTN.click(() => {
+        alert(`Button has been pressed, parent is: ${Id}`);
+    });
+    
+    const ratingDiv = $(`<div class="rating">${AverageRating}</div>`);
+    const altImgText = `${PrimaryTitle} movie poster`;
+    const imgDiv = $(`<img src="${PrimaryImage}" alt="${altImgText}">`);
+
+    upperDiv.append(addToCartBTN, ratingDiv, imgDiv);
+
+    const titleDiv = $(`<div>${PrimaryTitle}</div>`);
+    const yearDiv = $(`<div>${Year}</div>`);
+    const runtimeDiv = $(`<div>${RuntimeMinutes}</div>`);
+    const descriptionDiv = $(`<div>${Description}</div>`);
+
+    lowerDiv.append(titleDiv, yearDiv, runtimeDiv, descriptionDiv);
+
+}
+
+// let id = movie.id; // should be the id of the WHOLE div to find it easily
+                
+// let url = movie.url;    //Clicking on Rating will forward to this
+// let primaryTitle = movie.primaryTitle;  //Movie Title h3 div?
+// let description = movie.description;    //Movie Description maybe add hide/show css class
+// let primaryImage = movie.primaryImage;  //Movie Poster image
+// let year = movie.startYear;     //Release Year of the movie
+// let releaseDate = new Date(movie.releaseDate);  //Exact date been released with yyyy-mm-dd format
+// let language = movie.language;
+// let budget = movie.budget;
+// let grossWorldwide = movie.grossWorldwide;
+// let genres = movie.genres[0];//ITS AN ARRAY SO CHOOSING THE FIRST ONE cause genres in C# IS A STRING!
+// let isAdult = movie.isAdult;
+// let runtimeMinutes = movie.runtimeMinutes;
+// let averageRating = movie.averageRating;
+// let numVotes = movie.numVotes;
