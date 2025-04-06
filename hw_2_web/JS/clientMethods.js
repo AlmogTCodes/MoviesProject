@@ -1,4 +1,4 @@
-const port = 5093;
+const port = 54201;
 const postUrl = `http://localhost:${port}/api/Movie`;
 $(document).ready(init);
 
