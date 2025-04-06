@@ -15,12 +15,12 @@ hw2/*.csproj.user
 hw2/*.suo
 hw2/*.userosscache
 hw2/*.sln.docstates
-hw2/Properties/launchSettings.json
 hw2/TestResults/
 
 # Include essential config (excluding secrets)
 !hw2/appsettings.json
-hw2/appsettings.Development.json  # contains secrets, do not include
+# Contains secrets, do not include
+hw2/appsettings.Development.json
 
 # === Frontend (hw_2_web - static or JS framework) ===
 hw_2_web/node_modules/
@@ -47,9 +47,6 @@ hw_2_web/*.log
 *.njsproj.user
 *.vcxproj.user
 *.vcxproj.filters
-
-# === Rider (optional) ===
-.idea/
 
 # === Publish output ===
 **/publish/
