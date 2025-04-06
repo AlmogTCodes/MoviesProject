@@ -30,6 +30,7 @@ hw_2_web/.env
 hw_2_web/*.log
 
 # === Visual Studio IDE settings ===
+.vs/
 .vscode/
 .idea/
 *.vspscc
