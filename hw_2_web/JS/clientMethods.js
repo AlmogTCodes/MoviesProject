@@ -172,3 +172,6 @@ function sendToServer(movieToServer)
         (res) => insertSCB(res, movieToServer.Id), 
         insertECB);
 }
+
+//---------- Page 2 Methods ----------
+
