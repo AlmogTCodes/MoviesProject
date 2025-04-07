@@ -2,23 +2,20 @@ const port = 54201;
 const postUrl = `http://localhost:${port}/api/Movie`;
 const getUrl = `http://localhost:${port}/api/Movie`;
 
-
+let isLoaded = false;
 let numberOfMovies = 0;
 
 // Load movies functionality
 function init()
 {
-    let isLoaded = false;
-
     if(!isLoaded){
 
         $("#loadMoviesBTN").click(function(){
             if(isLoaded){
-                alert("Movies has been loaded");
+                alert("Movies has already been loaded");
                 return;
             }
-            loadMovies();
-            isLoaded = true;
+            loadMovies(); //Load movies to the site and update isLoaded indicator to be true;
         }) 
     }
 
@@ -28,7 +25,7 @@ function init()
 
 function loadMovies() {
 
-    //  data = The string returned from the JSON File file
+    //  'data' variable holds the whole content of Movies-db as a 
     $.getScript("./JS/Movies-db.js", function(data, textStatus) {
         
         if(textStatus === "success" && typeof movies !== "undefined") {
@@ -40,7 +37,9 @@ function loadMovies() {
             })
             
             isLoaded = true;
-        
+            
+            console.log(`Site has finished loading movies: ${isLoaded}`);
+               
         } else {
             console.error("Movies data failed to load properly.");
         }
@@ -124,7 +123,7 @@ function renderMovie(filteredMovieData) {
     const addToCartBTN = $(`<button class="addToCartBTN">Add to Cart</button>`);
     addToCartBTN.click(() => {
         console.log(`Button has been pressed, parent is: ${Id}`);
-        sendToServer(filteredMovieData);
+        sendToServer(filteredMovieData, movieDiv);
     });
     
     const ratingDiv = $(`<div class="rating">${AverageRating}</div>`);
@@ -144,30 +143,33 @@ function renderMovie(filteredMovieData) {
 
 // ------------------------------------------------------------------------------------------------------------------
 // Utility Function
-function sendToServer(movieToServer)
+function sendToServer(movieToServer, movieDiv)
 {
     ajaxCall(
         "POST", 
         postUrl, 
         JSON.stringify(movieToServer), 
-        (res) => insertSCB(res, movieToServer.Id), 
-        insertECB);
+        () => {
+            if (!movieDiv.hasClass("success")) { // Only process if not already been added
+                insertSCB(movieDiv);
+            }
+        },
+        insertECB); 
 }
 
 // ------------------------------------------------------------------------------------------------------------------
 // Callback functions
-function insertSCB(res, id)
+
+
+// Callback function executed after a successful POST request to the server.
+// It updates the movie's UI to indicate it has been added to the cart.
+function insertSCB(movieDiv)
 {
-    if(res)
-    {
-        const movieDiv = $(`#${id}`);
-        movieDiv.addClass("success");
-        
-        movieDiv.find(".addToCartBTN")
-                .text("Added")
-                .prop("disabled", true); // Update button text and disable it
-    }
-    console.log(`Inserted: ${res}`);
+    movieDiv.addClass("success");
+    
+    movieDiv.find(".addToCartBTN")
+            .text("Added")
+            .prop("disabled", true); // Update button text and disable it
 }
 
 function insertECB(err)
@@ -192,9 +194,24 @@ function ajaxCall(method, api, data, successCB, errorCB) {
 
 function loadMyList()
 {
+    if(!isLoaded){
+        console.error("Movies hasnt been loaded yet at the main site.")
+    }
+
+    
     //Set up action when searhc bar is active
     //$("#searchForm").attr("action", `${getUrl}/search`);
     console.log("Hello");
     //Need to add logic to use Get api that return list of all movies and load it into divs using helper functions
+}
+
+function getAllMoviesListFromServer()
+{
+    ajaxCall(
+        "GET", 
+        postUrl,
+        //console.log(JSON.stringify(movieToServer)) , 
+        //(res) => insertSCB(res, movieToServer.Id), 
+        insertECB);
 }
 
