@@ -33,7 +33,7 @@ function loadMovies() {
             movies.forEach(movie =>{
 
                 const newMovie = createServerMovie(movie);
-                renderMovie(newMovie);
+                renderMovie(newMovie,"addToCart");
             })
             
             isLoaded = true;
@@ -96,7 +96,7 @@ function createServerMovie(movieData) {
     };
 }
 
-function renderMovie(filteredMovieData) {
+function renderMovie(filteredMovieData, btnType) {
     
     if (!filteredMovieData) {
         $("#loadedMovies").append($(`<div class="Movie error">Unable to load movie</div>`));
@@ -120,17 +120,32 @@ function renderMovie(filteredMovieData) {
     const lowerDiv = $(`<div class="lowerDiv"></div>`);
     movieDiv.append(upperDiv, lowerDiv);
 
-    const addToCartBTN = $(`<button class="addToCartBTN">Add to Cart</button>`);
-    addToCartBTN.click(() => {
-        console.log(`Button has been pressed, parent is: ${Id}`);
-        sendToServer(filteredMovieData, movieDiv);
-    });
-    
+    if(btnType === "addToCart"){
+        
+        const addToCartBTN = $(`<button class="addToCartBTN">Add to Cart</button>`);
+        addToCartBTN.click(() => {
+            console.log(`Button has been pressed, parent is: ${Id}`);
+            sendToServer(filteredMovieData, movieDiv);
+        });
+
+        upperDiv.append(addToCartBTN);
+    }
+
+    if(btnType === "deleteFromList")
+    {
+        const deleteFromList = $(`<button class="deleteFromList">Remove</button>`);
+        deleteFromList.click(() => {
+            console.log(`Button has been pressed, parent is: ${Id}`);
+            //sendToServer(filteredMovieData, movieDiv);
+        });
+
+        upperDiv.append(deleteFromList);
+    }
     const ratingDiv = $(`<div class="rating">${AverageRating}</div>`);
     const altImgText = `${PrimaryTitle} movie poster`;
     const imgDiv = $(`<img src="${PrimaryImage}" alt="${altImgText}">`);
 
-    upperDiv.append(addToCartBTN, ratingDiv, imgDiv);
+    upperDiv.append(ratingDiv, imgDiv);
 
     const titleDiv = $(`<div>${PrimaryTitle}</div>`);
     const yearDiv = $(`<div>${Year}</div>`);
