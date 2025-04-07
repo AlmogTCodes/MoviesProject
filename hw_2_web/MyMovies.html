@@ -32,13 +32,24 @@
     <!-- add Field for search by name -->
     <div>
         <search>
+            <label for="search byTitle">
+                Search HERE!!!
+            </label>
             <!-- The Movies user can search are ONLY FROM THE SERVER -->
                 <input name="movieSearch" type="text" placeholder="Search ByT= Title...">
+                <input type="submit" id="titleSearchBTN">
          </search>
     </div> 
     <!-- add a Date field to search movie by certain range 
         * Field: Start DATE
         * Field End DATE 
     -->
+    <div id="searchByDate">
+        <label for="search date">
+            Insert Date to start looking
+        </label>
+        <input type="date" id="movieDate"> 
+        <input type="submit" id="startDateBTN">
+    </div>
 </body>
 </html>
