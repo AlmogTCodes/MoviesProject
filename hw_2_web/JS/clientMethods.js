@@ -1,20 +1,28 @@
 const port = 54201;
 const postUrl = `http://localhost:${port}/api/Movie`;
-const getUrl = `http://localhost:${port}/api/Movie`
+const getUrl = `http://localhost:${port}/api/Movie`;
+
+
+let numberOfMovies = 0;
 
 // Load movies functionality
 function init()
 {
     let isLoaded = false;
 
-    $("#loadMoviesBTN").click(function(){
-        if(isLoaded){
-            alert("Movies has been loaded");
-            return;
-        }
-        loadMovies();
-        isLoaded = true;
-    })
+    if(!isLoaded){
+
+        $("#loadMoviesBTN").click(function(){
+            if(isLoaded){
+                alert("Movies has been loaded");
+                return;
+            }
+            loadMovies();
+            isLoaded = true;
+        }) 
+    }
+
+
 }
 
 
@@ -71,7 +79,7 @@ function createServerMovie(movieData) {
     const movieIdOnlyNumbers = extractNumbersFromString(movieData.id);
 
     return {
-        Id: movieIdOnlyNumbers,
+        Id: numberOfMovies++,
         Url: movieData.url,
         PrimaryTitle: movieData.primaryTitle,
         Description: movieData.description,
@@ -81,7 +89,7 @@ function createServerMovie(movieData) {
         Language: movieData.language,
         Budget: movieData.budget,
         GrossWorldwide: movieData.grossWorldwide,
-        Genres: movieData.genres[0],
+        Genres: movieData.genres.join(),
         IsAdult: movieData.isAdult,
         RuntimeMinutes: movieData.runtimeMinutes,
         AverageRating: movieData.averageRating,
@@ -91,7 +99,7 @@ function createServerMovie(movieData) {
 
 function renderMovie(filteredMovieData) {
     
-    if (!filteredMovieData || !filteredMovieData.Id || !filteredMovieData.PrimaryTitle) {
+    if (!filteredMovieData) {
         $("#loadedMovies").append($(`<div class="Movie error">Unable to load movie</div>`));
         return;
     }
