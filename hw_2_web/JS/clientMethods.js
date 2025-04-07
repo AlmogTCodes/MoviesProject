@@ -209,16 +209,12 @@ function ajaxCall(method, api, data, successCB, errorCB) {
 
 function loadMyList()
 {
-    if(!isLoaded){
-        console.error("Movies hasnt been loaded yet at the main site.")
-    }
 
-    
     //Set up action when searhc bar is active
     //$("#searchForm").attr("action", `${getUrl}/search`);
     console.log("Hello");
     //Need to add logic to use Get api that return list of all movies and load it into divs using helper functions
-    
+
     // Get all movies from server and render them
     getAllMoviesListFromServer();
 }
@@ -236,10 +232,35 @@ function getAllMoviesListFromServer()
         insertECB);
 }
 
-function renderMyList(moviesFromServer)
-{
+function renderMyList(moviesFromServer) {
+    // Clear existing movies first to avoid duplicates
+    $("#loadedMovies").empty();
+    
+    console.log("Rendering movies from server:", moviesFromServer);
+    
+    if (!moviesFromServer || moviesFromServer.length === 0) {
+        $("#loadedMovies").append("<p>No movies in your collection yet.</p>");
+        return;
+    }
+    
+    // Render each movie with the delete button (fixed the typo "dedeleteFromListke")
     moviesFromServer.forEach(movie => {
-        renderMovie(movie, "dedeleteFromListke");
+
+        const normalizedMovie = {
+            Id: movie.id || movie.Id,
+            PrimaryTitle: movie.primaryTitle || movie.PrimaryTitle,
+            Description: movie.description || movie.Description,
+            PrimaryImage: movie.primaryImage || movie.PrimaryImage,
+            Year: movie.startYear || movie.Year,
+            RuntimeMinutes: movie.runtimeMinutes || movie.RuntimeMinutes,
+            AverageRating: movie.averageRating || movie.AverageRating,
+            Language: movie.language || movie.Language,
+            Genres: movie.genres ? (typeof movie.genres === 'string' ? movie.genres : movie.genres.join(',')) : (movie.Genres || ''),
+            IsAdult: movie.isAdult !== undefined ? movie.isAdult : (movie.IsAdult !== undefined ? movie.IsAdult : false),
+            NumVotes: movie.numVotes || movie.NumVotes
+        };
+
+        renderMovie(normalizedMovie, "deleteFromList");
     });
 }
 
