@@ -4,16 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Movie Collection</title>
-
+    <script
+        src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        crossorigin="anonymous">
+    </script>   
+    <script src="./JS/clientMethods.js"></script>
     
 </head>
 <body>
     <!-- when page is ready render movies from static list in the server -->
+     <script>
+        //$(document).ready(loadMyMoviesList); //should load to show all the movies i have in my CART
 
-    <!-- Each movie card has a Delete button which delete it from the static list-->
+        //<!-- Each movie card has a Delete button which delete it from the static list-->
 
+     </script>
+    
+     
     <!-- add Field for search by name -->
-
+    <div>
+        <form id="searchForm" action="">
+            <search>
+                <!-- The Movies user can search are ONLY FROM THE SERVER -->
+                    <input name="movieSearch" type="text" placeholder="Search By Title...">
+                    <button type="button" id="searchButton">Search</button>
+             </search>
+        </form>
+    </div> 
     <!-- add a Date field to search movie by certain range 
         * Field: Start DATE
         * Field End DATE 
