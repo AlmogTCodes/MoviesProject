@@ -218,15 +218,48 @@ function loadMyList()
     //$("#searchForm").attr("action", `${getUrl}/search`);
     console.log("Hello");
     //Need to add logic to use Get api that return list of all movies and load it into divs using helper functions
+    
+    // Get all movies from server and render them
+    getAllMoviesListFromServer();
 }
 
 function getAllMoviesListFromServer()
 {
     ajaxCall(
         "GET", 
-        postUrl,
-        //console.log(JSON.stringify(movieToServer)) , 
-        //(res) => insertSCB(res, movieToServer.Id), 
+        getUrl,
+        "", 
+        (moviesFromServer) => {
+            console.log("Successfully retrieved movies from server:", moviesFromServer);
+            renderMyList(moviesFromServer);
+        }, 
         insertECB);
 }
+
+function renderMyList(moviesFromServer)
+{
+    moviesFromServer.forEach(movie => {
+        renderMovie(movie, "dedeleteFromListke");
+    });
+}
+
+    // //  'data' variable holds the whole content of Movies-db as a 
+    // $.getScript("./JS/Movies-db.js", function(data, textStatus) {
+        
+    //     if(textStatus === "success" && typeof movies !== "undefined") {
+            
+    //         movies.forEach(movie =>{
+
+    //             const newMovie = createServerMovie(movie);
+    //             renderMovie(newMovie,"addToCart");
+    //         })
+            
+    //         isLoaded = true;
+            
+    //         console.log(`Site has finished loading movies: ${isLoaded}`);
+               
+    //     } else {
+    //         console.error("Movies data failed to load properly.");
+    //     }
+    // });
 
