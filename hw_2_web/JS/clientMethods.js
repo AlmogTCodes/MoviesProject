@@ -1,6 +1,7 @@
 const port = 54201;
 const postUrl = `http://localhost:${port}/api/Movie`;
-$(document).ready(init);
+const getUrl = `http://localhost:${port}/api/Movie`
+
 
 function init()
 {
@@ -174,4 +175,12 @@ function sendToServer(movieToServer)
 }
 
 //---------- Page 2 Methods ----------
+
+function loadMyList()
+{
+    //Set up action when searhc bar is active
+    //$("#searchForm").attr("action", `${getUrl}/search`);
+    alert("Hello");
+    //Need to add logic to use Get api that return list of all movies and load it into divs using helper functions
+}
 
