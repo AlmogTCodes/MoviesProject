@@ -2,7 +2,7 @@ const port = 54201;
 const postUrl = `http://localhost:${port}/api/Movie`;
 const getUrl = `http://localhost:${port}/api/Movie`
 
-
+// Load movies functionality
 function init()
 {
     let isLoaded = false;
@@ -39,6 +39,8 @@ function loadMovies() {
     });
 }
 
+// ------------------------------------------------------------------------------------------------------------------
+// Helper function in create server movie
 function extractNumbersFromString(str)
 {
     let onlyNumbers = "";
@@ -132,19 +134,20 @@ function renderMovie(filteredMovieData) {
 
 }
 
-function ajaxCall(method, api, data, successCB, errorCB) {
-    $.ajax({
-        type: method,
-        url: api,
-        data: data,
-        cache: false,
-        contentType: "application/json",
-        dataType: "json",
-        success: successCB,
-        error: errorCB
-    });
+// ------------------------------------------------------------------------------------------------------------------
+// Utility Function
+function sendToServer(movieToServer)
+{
+    ajaxCall(
+        "POST", 
+        postUrl, 
+        JSON.stringify(movieToServer), 
+        (res) => insertSCB(res, movieToServer.Id), 
+        insertECB);
 }
 
+// ------------------------------------------------------------------------------------------------------------------
+// Callback functions
 function insertSCB(res, id)
 {
     if(res)
@@ -164,14 +167,17 @@ function insertECB(err)
     console.error(`Error: ${err}`);
 }
 
-function sendToServer(movieToServer)
-{
-    ajaxCall(
-        "POST", 
-        postUrl, 
-        JSON.stringify(movieToServer), 
-        (res) => insertSCB(res, movieToServer.Id), 
-        insertECB);
+function ajaxCall(method, api, data, successCB, errorCB) {
+    $.ajax({
+        type: method,
+        url: api,
+        data: data,
+        cache: false,
+        contentType: "application/json",
+        dataType: "json",
+        success: successCB,
+        error: errorCB
+    });
 }
 
 //---------- Page 2 Methods ----------
