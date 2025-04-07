@@ -3,6 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #loadedMovies {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .Movie {
+            border: 1px solid black;
+            width: 20rem;
+        }
+
+        img{
+            height:100%;
+            width:20rem;
+            object-fit: cover;
+        }
+
+        .Movie.success {
+            border-color: green;
+            background-color: #e6ffe6;
+        }
+
+    </style>
+    
     <title>My Movie Collection</title>
 
     <script
@@ -52,6 +78,7 @@
         <input type="submit" id="startDateBTN">
     </div>
 
-    <div id="loadedMovies"></div>
-</body>
+    <div id="loadedMovies">
+        <!-- Movie Divs will be inserted Dynamically -->
+    </div></body>
 </html>
