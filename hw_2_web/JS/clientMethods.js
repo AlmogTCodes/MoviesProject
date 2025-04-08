@@ -136,7 +136,10 @@ function renderMovie(filteredMovieData, btnType) {
         const deleteFromList = $(`<button class="deleteFromList">Remove</button>`);
         deleteFromList.click(() => {
             console.log(`Button has been pressed, parent is: ${Id}`);
-            //sendToServer(filteredMovieData, movieDiv);
+            // Confirm before deleting
+            if (confirm(`Are you sure you want to remove "${PrimaryTitle}" from your list?`)) {
+                deleteFromServer(Id, movieDiv);
+            }        
         });
 
         upperDiv.append(deleteFromList);
@@ -264,23 +267,26 @@ function renderMyList(moviesFromServer) {
     });
 }
 
-    // //  'data' variable holds the whole content of Movies-db as a 
-    // $.getScript("./JS/Movies-db.js", function(data, textStatus) {
-        
-    //     if(textStatus === "success" && typeof movies !== "undefined") {
-            
-    //         movies.forEach(movie =>{
-
-    //             const newMovie = createServerMovie(movie);
-    //             renderMovie(newMovie,"addToCart");
-    //         })
-            
-    //         isLoaded = true;
-            
-    //         console.log(`Site has finished loading movies: ${isLoaded}`);
-               
-    //     } else {
-    //         console.error("Movies data failed to load properly.");
-    //     }
-    // });
-
+// Utility function to delete a movie from the server
+function deleteFromServer(movieId, movieDiv) {
+    ajaxCall(
+        "DELETE", 
+        `${getUrl}/${movieId}`, 
+        "", 
+        () => {
+            // On success, remove the movie from the UI
+            movieDiv.fadeOut(300, function() {
+                $(this).remove();
+                
+                // Check if there are any movies left
+                if ($("#loadedMovies .Movie").length === 0) {
+                    $("#loadedMovies").append("<p>No movies in your collection yet.</p>");
+                }
+            });
+        },
+        (err) => {
+            console.error(`Error deleting movie: ${err}`);
+            alert("Failed to delete movie. Please try again.");
+        }
+    );
+}
