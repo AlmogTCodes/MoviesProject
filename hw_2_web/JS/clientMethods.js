@@ -1,6 +1,7 @@
 const port = 54201;
 const postUrl = `http://localhost:${port}/api/Movie`;
 const getUrl = `http://localhost:${port}/api/Movie`;
+const searchUrl = `http://localhost:${port}/api/Movie/search`; 
 
 let isLoaded = false;
 let numberOfMovies = 0;
@@ -216,6 +217,8 @@ function loadMyList()
     //Set up action when searhc bar is active
     //$("#searchForm").attr("action", `${getUrl}/search`);
     console.log("Hello");
+    setupSearchFunctionality();
+
     //Need to add logic to use Get api that return list of all movies and load it into divs using helper functions
 
     // Get all movies from server and render them
@@ -250,7 +253,7 @@ function renderMyList(moviesFromServer) {
     moviesFromServer.forEach(movie => {
 
         const normalizedMovie = {
-            Id: movie.id || movie.Id,
+            Id: movie.id,
             PrimaryTitle: movie.primaryTitle || movie.PrimaryTitle,
             Description: movie.description || movie.Description,
             PrimaryImage: movie.primaryImage || movie.PrimaryImage,
@@ -289,4 +292,33 @@ function deleteFromServer(movieId, movieDiv) {
             alert("Failed to delete movie. Please try again.");
         }
     );
+}
+
+function searchMoviesByTitle(movieTitle)
+{
+    ajaxCall(
+        "GET",
+        `${searchUrl}?title=${movieTitle}`,
+        "",
+        (searchResult) => {
+            console.log("Search Result: ", searchResult);
+            renderMyList(searchResult);
+        },
+
+        (err) => {
+            console.error(`Error searching movies: ${err}`);
+            alert("Error occurred while searching. Please try again.");
+        }
+    );
+}
+
+function setupSearchFunctionality()
+{
+    $(`#titleSearchBTN`).click(() => {
+
+        const movieTitle = $("input[name='movieSearch']").val();
+        console.log(`Searching for movies with title: ${movieTitle}`);
+
+        searchMoviesByTitle(movieTitle);
+    })
 }
