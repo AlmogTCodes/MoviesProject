@@ -76,7 +76,7 @@ function createServerMovie(movieData) {
     }
 
     const movieIdOnlyNumbers = extractNumbersFromString(movieData.id);
-
+    console.log(movieIdOnlyNumbers);
     return {
         Id: numberOfMovies++,
         Url: movieData.url,
