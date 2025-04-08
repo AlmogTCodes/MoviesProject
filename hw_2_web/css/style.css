@@ -1,0 +1,101 @@
+/* Main styles for MoviesProject */
+
+/* Movie container styles */
+#loadedMovies {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+/* Individual movie card styles */
+.Movie {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 20rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    overflow: hidden;
+}
+
+.Movie:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Movie images */
+.Movie img {
+    height: 300px;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Movie content area */
+.Movie .content {
+    padding: 1rem;
+}
+
+/* Success state for movies (e.g. when added to collection) */
+.Movie.success {
+    border-color: green;
+    background-color: #e6ffe6;
+}
+
+/* Navigation styles */
+nav {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-right: 1.5rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+nav a:hover {
+    background-color: #555;
+}
+
+/* Search section styles */
+.search-section {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+}
+
+/* Button styles */
+button, input[type="submit"] {
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Form input styles */
+input[type="text"], input[type="date"] {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+}
+
+/* Page title styling */
+h1 {
+    color: #333;
+    margin-bottom: 1.5rem;
+}
