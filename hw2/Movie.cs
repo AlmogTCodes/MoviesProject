@@ -283,7 +283,7 @@
             // Check if the movie already exists in the list by id or primaryTitle
             foreach (var movie in MoviesList)
             {
-                if (movie.id == id)
+                if (movie.Id == id)
                 {
                     MoviesList.Remove(movie);
                     return true; // Movie has been successfully removed
