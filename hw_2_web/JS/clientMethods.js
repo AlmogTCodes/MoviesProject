@@ -322,8 +322,3 @@ function setupSearchFunctionality()
         searchMoviesByTitle(movieTitle);
     })
 }
-
-function newfunc()
-{
-    
-}
