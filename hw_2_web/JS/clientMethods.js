@@ -157,7 +157,6 @@ function renderMovie(filteredMovieData, btnType) {
     const descriptionDiv = $(`<div>${Description}</div>`);
 
     lowerDiv.append(titleDiv, yearDiv, runtimeDiv, descriptionDiv);
-
 }
 
 // ------------------------------------------------------------------------------------------------------------------
@@ -209,11 +208,10 @@ function ajaxCall(method, api, data, successCB, errorCB) {
     });
 }
 
-//---------- Page 2 Methods ----------
+//---------------------------------------------- Page 2 Methods ----------------------------------------------------
 
 function loadMyList()
 {
-
     //Set up action when searhc bar is active
     //$("#searchForm").attr("action", `${getUrl}/search`);
     console.log("Hello");
@@ -269,6 +267,16 @@ function renderMyList(moviesFromServer) {
         renderMovie(normalizedMovie, "deleteFromList");
     });
 }
+// This will fetch the latest movies from the server and render them on the page
+$(document).ready(function () {
+    // Attach click event to the reload button
+    $("#reloadMoviesBTN").click(function () {
+        console.log("Reloading movies...");
+        getAllMoviesListFromServer(); // Fetch and render the latest movies
+    });
+});
+
+
 
 // Utility function to delete a movie from the server
 function deleteFromServer(movieId, movieDiv) {
@@ -294,23 +302,23 @@ function deleteFromServer(movieId, movieDiv) {
     );
 }
 
-function searchMoviesByTitle(movieTitle)
-{
+function searchMoviesByTitle(movieTitle) {
+    const normalizedTitle = movieTitle.toLowerCase(); // Convert search input to lowercase
     ajaxCall(
         "GET",
-        `${searchUrl}?title=${movieTitle}`,
+        `${searchUrl}?title=${encodeURIComponent(normalizedTitle)}`, // Send normalized title
         "",
         (searchResult) => {
             console.log("Search Result: ", searchResult);
             renderMyList(searchResult);
         },
-
         (err) => {
             console.error(`Error searching movies: ${err}`);
             alert("Error occurred while searching. Please try again.");
         }
     );
 }
+
 
 function setupSearchFunctionality()
 {
@@ -321,4 +329,9 @@ function setupSearchFunctionality()
 
         searchMoviesByTitle(movieTitle);
     })
+}
+
+function newfunc()
+{
+    
 }
