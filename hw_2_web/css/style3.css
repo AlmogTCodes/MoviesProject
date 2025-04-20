@@ -1,0 +1,526 @@
+/* ==========================================================================
+   Base Styles & Resets
+   ========================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    line-height: 1.5; /* Added for better default spacing */
+}
+
+/* ==========================================================================
+   Layout Styles
+   ========================================================================== */
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* Centering handled by main for content, remove if container needs direct centering */
+    /* justify-content: center; */
+    /* align-items: center; */
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px; /* Apply body padding here or keep on body if preferred */
+    flex-grow: 1; /* Allow main to grow and fill space */
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+h1 {
+    color: #333;
+    margin-top: 1.5rem; /* Adjusted margin */
+    margin-bottom: 1.5rem;
+    font-size: 2.5rem;
+    text-align: center;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+h1::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(to right, #ff9a44, #fc6076);
+    border-radius: 2px;
+}
+
+/* ==========================================================================
+   Navigation
+   ========================================================================== */
+
+nav {
+    background: linear-gradient(90deg, #3f51b5, #2196f3);
+    color: white;
+    padding: 1rem;
+    /* margin-bottom: 1.5rem; */ /* Removed, handled by main padding or specific element margin */
+    border-radius: 0 0 12px 12px; /* Consider if this should be applied elsewhere */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Make nav span width */
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center; /* Center nav items */
+    gap: 1rem;
+}
+
+.nav-list li {
+    display: inline; /* Flex handles display, this is redundant */
+}
+
+nav a { /* More specific selector */
+    color: white;
+    text-decoration: none;
+    /* margin-right: 1.5rem; */ /* Replaced by gap in .nav-list */
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    transition: all 0.3s;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    display: inline-block; /* Ensure padding and transform work */
+}
+
+nav a:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+/* General Button Styles */
+button,
+input[type="submit"],
+.styled-button { /* Add class for consistent button styling if needed */
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(45deg, #2196f3, #1976d2);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+    font-size: 1rem; /* Default font size */
+    text-decoration: none; /* For link styled as button */
+    display: inline-block; /* For link styled as button */
+    text-align: center; /* For link styled as button */
+}
+
+button:hover,
+input[type="submit"]:hover,
+.styled-button:hover {
+    background: linear-gradient(45deg, #1976d2, #0d47a1);
+    box-shadow: 0 6px 12px rgba(33, 150, 243, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Specific Button Overrides */
+#loadMoviesBTN {
+    background: linear-gradient(45deg, #ff9800, #ff5722);
+    box-shadow: 0 4px 8px rgba(255, 152, 0, 0.3);
+    font-size: 1.1rem;
+    padding: 0.8rem 1.8rem;
+    margin: 20px 0; /* Keep specific margin */
+}
+
+#loadMoviesBTN:hover {
+    background: linear-gradient(45deg, #ff5722, #e64a19);
+    box-shadow: 0 6px 12px rgba(255, 152, 0, 0.4);
+}
+
+.addToCartBTN {
+    background: linear-gradient(45deg, #2196f3, #4CAF50);
+    /* Common styles moved to .addToCartBTN, .deleteFromList */
+}
+
+.deleteFromList {
+    background: linear-gradient(45deg, #ff5252, #ff8a80);
+     /* Common styles moved to .addToCartBTN, .deleteFromList */
+}
+
+.addToCartBTN,
+.deleteFromList {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    z-index: 2;
+    font-weight: bold;
+    backdrop-filter: blur(5px);
+    border-radius: 25px; /* Overrides general button */
+    padding: 8px 15px; /* Overrides general button */
+    opacity: 0.9;
+    color: white; /* Ensure text color */
+    border: none; /* Ensure no border */
+    box-shadow: none; /* Remove general button shadow if needed */
+    font-size: 0.9rem; /* Adjust size if needed */
+}
+
+.addToCartBTN:hover,
+.deleteFromList:hover {
+    transform: none; /* Override general hover transform if needed */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Optional subtle hover shadow */
+    opacity: 1;
+}
+
+
+/* ==========================================================================
+   Forms & Search
+   ========================================================================== */
+
+.search-section {
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    width: 80%; /* Constrain width */
+    max-width: 600px; /* Max width */
+    box-sizing: border-box;
+}
+
+.search-section > div {
+    margin-bottom: 15px;
+    display: flex; /* Align label and input */
+    align-items: center; /* Vertically align */
+    gap: 10px; /* Space between label and input */
+}
+
+.search-section label {
+    font-weight: bold;
+    color: #0277bd;
+    /* margin-right: 10px; */ /* Replaced by gap */
+    display: inline-block;
+    min-width: 120px; /* Adjusted width */
+    flex-shrink: 0; /* Prevent label from shrinking */
+}
+
+input[type="text"],
+input[type="date"] {
+    padding: 0.7rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 25px;
+    /* margin-right: 0.8rem; */ /* Handled by gap or flex */
+    transition: all 0.3s;
+    font-size: 0.95rem;
+    /* width: 250px; */ /* Allow flexbox to manage width */
+    flex-grow: 1; /* Allow input to take remaining space */
+    background-color: white;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus {
+    border-color: #2196f3;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.05); /* Keep inset shadow */
+    outline: none;
+}
+
+/* ==========================================================================
+   Movie List & Cards
+   ========================================================================== */
+
+#loadedMovies {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: 1.5rem; /* Increased padding */
+    justify-content: center;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    width: 100%; /* Take full width within main */
+    box-sizing: border-box;
+    margin-top: 1.5rem;
+}
+
+.Movie {
+    border: none;
+    border-radius: 12px;
+    width: 20rem;
+    max-width: calc(100% - 2rem); /* Ensure it fits on small screens */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    transform-style: preserve-3d; /* For 3D hover effect */
+    display: flex; /* Use flex for card layout */
+    flex-direction: column; /* Stack image and content */
+}
+
+.Movie:hover {
+    transform: translateY(-10px) rotateX(5deg);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25), 0 5px 15px rgba(0, 123, 255, 0.15);
+}
+
+/* Card Image Area */
+.upperDiv {
+    position: relative;
+    overflow: hidden; /* Clip image zoom */
+}
+
+.Movie img {
+    height: 320px;
+    width: 100%;
+    object-fit: cover;
+    transition: transform 0.5s, filter 0.5s; /* Combined transition */
+    filter: brightness(0.95);
+    display: block; /* Remove potential bottom space */
+}
+
+.Movie:hover img {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(45deg, #ff9a44, #fc6076);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    box-shadow: 0 3px 10px rgba(252, 96, 118, 0.4);
+    z-index: 1;
+    font-size: 0.9rem;
+}
+
+/* Card Content Area */
+.lowerDiv {
+    padding: 1.2rem;
+    background: white;
+    position: relative; /* For potential absolute elements inside */
+    flex-grow: 1; /* Allow content to fill remaining card space */
+    display: flex;
+    flex-direction: column;
+}
+
+.lowerDiv .title { /* Use a class for the title */
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    background: linear-gradient(to right, #12c2e9, #c471ed, #f64f59);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent; /* Fallback */
+    line-height: 1.2; /* Adjust line height for title */
+}
+
+.lowerDiv .meta-info span { /* Use spans within a container div if needed */
+    display: inline-block;
+    margin-right: 10px;
+    background-color: #f0f0f0;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.lowerDiv .description { /* Use a class for description */
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #666;
+    max-height: calc(1.5em * 4); /* Calculate max-height based on line-height and clamp */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* Number of lines to show */
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    margin-top: auto; /* Push description down if content is short */
+}
+
+/* ==========================================================================
+   Success State & Animations
+   ========================================================================== */
+
+.Movie.success {
+    border: none; /* Keep border override */
+    animation: successPulse 1.5s ease-in-out;
+}
+
+@keyframes successPulse {
+    0% {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(76, 175, 80, 0.7);
+    }
+    70% {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 0 0 15px rgba(76, 175, 80, 0);
+    }
+    100% {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(76, 175, 80, 0);
+    }
+}
+
+.Movie.success::after {
+    content: "✓ Added to Collection";
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-10deg);
+    background: rgba(76, 175, 80, 0.9); /* Slightly less transparent */
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    z-index: 10;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+
+/* ==========================================================================
+   Media Queries (Responsive Adjustments)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem; /* Slightly smaller title */
+    }
+
+    .nav-list {
+        gap: 0.5rem; /* Smaller gap */
+        justify-content: space-around; /* Spread out items */
+    }
+
+    nav a {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .search-section {
+        width: 95%; /* Wider search on small screens */
+    }
+
+    .search-section > div {
+        flex-direction: column; /* Stack label and input */
+        align-items: flex-start; /* Align items left */
+        margin-bottom: 10px;
+    }
+
+    .search-section label {
+        min-width: auto; /* Remove min-width */
+        margin-bottom: 5px; /* Space below label */
+    }
+
+    input[type="text"],
+    input[type="date"] {
+        width: 100%; /* Full width input */
+        /* margin-bottom: 10px; */ /* Handled by parent div margin */
+    }
+
+    #loadedMovies {
+        padding: 1rem; /* Adjust padding */
+    }
+
+    .Movie {
+        width: calc(100% - 1rem); /* Adjust width for padding/gap */
+        max-width: none; /* Remove max-width constraint */
+    }
+
+    .Movie img {
+        height: 250px; /* Adjust image height */
+    }
+
+    .lowerDiv .title {
+        font-size: 1.3rem;
+    }
+
+    .lowerDiv .description {
+         -webkit-line-clamp: 3; /* Show fewer lines */
+         line-clamp: 3;
+         max-height: calc(1.5em * 3);
+    }
+}
+
+@media (max-width: 480px) {
+     h1 {
+        font-size: 1.8rem;
+    }
+
+    .nav-list {
+        flex-direction: column; /* Stack nav items */
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    nav {
+        padding: 0.8rem;
+    }
+
+    #loadMoviesBTN {
+        font-size: 1rem;
+        padding: 0.7rem 1.5rem;
+    }
+
+    .Movie {
+        width: 100%; /* Full width */
+    }
+
+     .Movie img {
+        height: 200px; /* Further adjust image height */
+    }
+
+    .lowerDiv {
+        padding: 1rem;
+    }
+
+    .lowerDiv .title {
+        font-size: 1.2rem;
+    }
+
+    .lowerDiv .meta-info span {
+        font-size: 0.8rem;
+        padding: 3px 10px;
+    }
+
+    .lowerDiv .description {
+        font-size: 0.9rem;
+    }
+
+    .addToCartBTN,
+    .deleteFromList {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    .rating {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+}
