@@ -244,7 +244,8 @@
             List<Movie> selectedList = new List<Movie>();
             foreach (Movie m in MoviesList)
             {
-                if (m.primaryTitle == title)
+                // Convert both the search title and movie title to lowercase for comparison
+                if (m.primaryTitle.ToLower() == title.ToLower())
                 {
                     selectedList.Add(m);
                 }
