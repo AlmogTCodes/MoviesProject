@@ -255,7 +255,7 @@ function renderMyList(moviesFromServer) {
             PrimaryTitle: movie.primaryTitle || movie.PrimaryTitle,
             Description: movie.description || movie.Description,
             PrimaryImage: movie.primaryImage || movie.PrimaryImage,
-            Year: movie.startYear || movie.Year,
+            Year: movie.year,
             RuntimeMinutes: movie.runtimeMinutes || movie.RuntimeMinutes,
             AverageRating: movie.averageRating || movie.AverageRating,
             Language: movie.language || movie.Language,
