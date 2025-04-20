@@ -6,7 +6,7 @@
     
     <title>My Movie Collection</title>
     
-    <link rel="stylesheet" href="./css/style2.css">
+    <link rel="stylesheet" href="./css/style3.css"> 
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
@@ -30,18 +30,23 @@
             </nav>
         </header>
         <main>
-            <!-- Search by name -->
-            <section>
-                <label for="movieSearch">Search HERE!!!</label>
-                <input name="movieSearch" id="movieSearch" type="text" placeholder="Search By Title...">
-                <input type="submit" id="titleSearchBTN">
+            <!-- Search Sections -->
+            <section class="search-section">
+                <div>
+                    <label for="movieSearch">Search by Title:</label>
+                    <input name="movieSearch" id="movieSearch" type="text" placeholder="Enter movie title...">
+                    <input type="submit" id="titleSearchBTN" value="Search">
+                </div>
             </section>
-            <!-- Search by date -->
-            <section id="searchByDate">
-                <label for="movieDate">Insert Date to start looking</label>
-                <input type="date" id="movieDate"> 
-                <input type="submit" id="startDateBTN">
+
+            <section class="search-section" id="searchByDate">
+                 <div>
+                    <label for="movieDate">Search by Release Date (From):</label>
+                    <input type="date" id="movieDate"> 
+                    <input type="submit" id="startDateBTN" value="Search">
+                 </div>
             </section>
+
             <div id="loadedMovies">
                 <!-- Movie Divs will be inserted Dynamically -->
             </div>
