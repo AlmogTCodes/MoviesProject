@@ -3,34 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/style2.css">
+    
     <title>My Movies</title>
 
-    <script
-            src="https://code.jquery.com/jquery-3.7.1.min.js"
+    <link rel="stylesheet" href="./css/style2.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous">
     </script>
     
     <script src="./JS/clientMethods.js"></script>
-    
     <script>
         $(document).ready(init);
     </script>
-
 </head>
 <body>
-    <h1>Movies</h1>
-    <div class="navContainer">
-        <nav>
-            <a href="MyMovies.html" class="styled-button"> My Collection</a>
-            <button id="loadMoviesBTN" class="styled-button"> Load Movies </button>
-        </nav>
-    </div>
+    <div class="container">
+        <header>
+            <h1>Movies</h1>
+            <nav>
+                <ul class="nav-list">
+                    <li><a href="index.html" class="styled-button">Home</a></li>
+                    <li><a href="MyMovies.html" class="styled-button">My Collection</a></li>
+                </ul>
+            </nav>
+        </header>
 
-    <div id="loadedMovies">
-        <!-- Movie Divs will be inserted Dynamically -->
+        <main>
+            <button id="loadMoviesBTN" class="styled-button">Load Movies</button>
+            <div id="loadedMovies">
+                <!-- Movies Divs will be inserted dynamically -->
+            </div>
+        </main>
     </div>
-
 </body>
 </html>
