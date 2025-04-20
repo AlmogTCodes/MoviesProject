@@ -3,51 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/style2.css">
-  
+    
     <title>My Movie Collection</title>
-
-    <script
-        src="https://code.jquery.com/jquery-3.7.1.min.js"
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-        crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="./css/style2.css">
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous">
     </script>
-
+    
     <script src="./JS/clientMethods.js"></script>
-
     <script>
         $(document).ready(loadMyList);
     </script>
-
-    
 </head>
 <body>
-    <a href="index.html"> Main site</a>
-     
-    <!-- add Field for search by name -->
-    <div>
-        <search>
-            <label for="search byTitle">
-                Search HERE!!!
-            </label>
-            <!-- The Movies user can search are ONLY FROM THE SERVER -->
-                <input name="movieSearch" type="text" placeholder="Search ByT= Title...">
+    <div class="container">
+        <header>
+            <h1>My Movie Collection</h1>
+            <nav>
+                <ul class="nav-list">
+                    <li><a href="index.html" class="styled-button">Home</a></li>
+                    <li><a href="MyMovies.html" class="styled-button">My Collection</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <!-- Search by name -->
+            <section>
+                <label for="movieSearch">Search HERE!!!</label>
+                <input name="movieSearch" id="movieSearch" type="text" placeholder="Search By Title...">
                 <input type="submit" id="titleSearchBTN">
-         </search>
-    </div> 
-    <!-- add a Date field to search movie by certain range 
-        * Field: Start DATE
-        * Field End DATE 
-    -->
-    <div id="searchByDate">
-        <label for="search date">
-            Insert Date to start looking
-        </label>
-        <input type="date" id="movieDate"> 
-        <input type="submit" id="startDateBTN">
+            </section>
+            <!-- Search by date -->
+            <section id="searchByDate">
+                <label for="movieDate">Insert Date to start looking</label>
+                <input type="date" id="movieDate"> 
+                <input type="submit" id="startDateBTN">
+            </section>
+            <div id="loadedMovies">
+                <!-- Movie Divs will be inserted Dynamically -->
+            </div>
+        </main>
     </div>
-
-    <div id="loadedMovies">
-        <!-- Movie Divs will be inserted Dynamically -->
-    </div></body>
+</body>
 </html>
