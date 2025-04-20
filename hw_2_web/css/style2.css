@@ -1,5 +1,16 @@
 /* Main styles for MoviesProject */
 
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 1rem;
+}
+.nav-list li {
+    display: inline;
+}
+
 /* Movie container styles */
 #loadedMovies {
     display: flex;
@@ -106,7 +117,6 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-fill-color: transparent;
 }
 
 /* Year and runtime with badge style */
@@ -132,6 +142,7 @@
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 4;
+    line-clamp: 4;
     -webkit-box-orient: vertical;
 }
 
