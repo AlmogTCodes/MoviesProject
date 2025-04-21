@@ -16,7 +16,7 @@ namespace hw2.Controllers
         }
 
         // GET: api/Movie/from/{startDate}/until/{endDate}
-        [HttpGet("searchByRouting/url/api/Movie/from/{startDate}/until/{endData}")] // this uses resource routing
+        [HttpGet("searchByDate")] // this uses resource routing
         public IEnumerable<Movie> GetByReleaseDate(DateTime startDate, DateTime endData)
         {
             return Movie.GetByReleaseDate(startDate,endData);  
