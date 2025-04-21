@@ -213,7 +213,7 @@
         {
             foreach (var movie in MoviesList)
             {
-                if (movie.id == this.id && movie.primaryTitle == this.primaryTitle)
+                if (movie.id == this.id || movie.primaryTitle == this.primaryTitle)
                 {
                     return false; // Movie already exists
                 }
