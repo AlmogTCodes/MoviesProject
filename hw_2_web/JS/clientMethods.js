@@ -79,21 +79,21 @@ function createServerMovie(movieData) {
     const movieIdOnlyNumbers = extractNumbersFromString(movieData.id);
     console.log(movieIdOnlyNumbers);
     return {
-        Id: numberOfMovies++,
-        Url: movieData.url,
-        PrimaryTitle: movieData.primaryTitle,
-        Description: movieData.description,
-        PrimaryImage: movieData.primaryImage,
-        Year: movieData.startYear,
-        ReleaseDate: movieData.releaseDate,
-        Language: movieData.language,
-        Budget: movieData.budget,
-        GrossWorldwide: movieData.grossWorldwide,
-        Genres: movieData.genres.join(),
-        IsAdult: movieData.isAdult,
-        RuntimeMinutes: movieData.runtimeMinutes,
-        AverageRating: movieData.averageRating,
-        NumVotes: movieData.numVotes,
+        id: numberOfMovies++,
+        url: movieData.url,
+        primaryTitle: movieData.primaryTitle,
+        description: movieData.description,
+        primaryImage: movieData.primaryImage,
+        year: movieData.startYear,
+        releaseDate: movieData.releaseDate,
+        language: movieData.language,
+        budget: movieData.budget,
+        grossWorldwide: movieData.grossWorldwide,
+        genres: movieData.genres.join(),
+        isAdult: movieData.isAdult,
+        runtimeMinutes: movieData.runtimeMinutes,
+        averageRating: movieData.averageRating,
+        numVotes: movieData.numVotes,
     };
 }
 
@@ -105,16 +105,16 @@ function renderMovie(filteredMovieData, btnType) {
     }
     
     const { 
-        Id, 
-        PrimaryTitle, 
-        Description = "No description available", // Default value for missing description, 
-        PrimaryImage = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' enable-background='new 0 0 24 24' height='24' viewBox='0 0 24 24' width='24'%3E%3Cg%3E%3Crect fill='none' height='24' width='24'/%3E%3Cpath d='M21.9,21.9l-8.49-8.49l0,0L3.59,3.59l0,0L2.1,2.1L0.69,3.51L3,5.83V19c0,1.1,0.9,2,2,2h13.17l2.31,2.31L21.9,21.9z M5,18 l3.5-4.5l2.5,3.01L12.17,15l3,3H5z M21,18.17L5.83,3H19c1.1,0,2,0.9,2,2V18.17z'/%3E%3C/g%3E%3C/svg%3E", 
-        Year = "Unknown", // Default value for missing year, 
-        RuntimeMinutes = "N/A", // Default value for missing runtime
-        AverageRating = "No rating yet" // Default value for missing rating
+        id, 
+        primaryTitle, 
+        description = "No description available", // Default value for missing description, 
+        primaryImage = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' enable-background='new 0 0 24 24' height='24' viewBox='0 0 24 24' width='24'%3E%3Cg%3E%3Crect fill='none' height='24' width='24'/%3E%3Cpath d='M21.9,21.9l-8.49-8.49l0,0L3.59,3.59l0,0L2.1,2.1L0.69,3.51L3,5.83V19c0,1.1,0.9,2,2,2h13.17l2.31,2.31L21.9,21.9z M5,18 l3.5-4.5l2.5,3.01L12.17,15l3,3H5z M21,18.17L5.83,3H19c1.1,0,2,0.9,2,2V18.17z'/%3E%3C/g%3E%3C/svg%3E", 
+        year = "Unknown", // Default value for missing year, 
+        runtimeMinutes = "N/A", // Default value for missing runtime
+        averageRating = "No rating yet" // Default value for missing rating
     } = filteredMovieData;
     
-    const movieDiv = $(`<div class="Movie" id="${Id}"></div>`);
+    const movieDiv = $(`<div class="Movie" id="${id}"></div>`);
     $("#loadedMovies").append(movieDiv);
 
     const upperDiv = $(`<div class="upperDiv"></div>`);
@@ -125,7 +125,7 @@ function renderMovie(filteredMovieData, btnType) {
         
         const addToCartBTN = $(`<button class="addToCartBTN">Add to Cart</button>`);
         addToCartBTN.click(() => {
-            console.log(`Button has been pressed, parent is: ${Id}`);
+            console.log(`Button has been pressed, parent is: ${id}`);
             sendToServer(filteredMovieData, movieDiv);
         });
 
@@ -136,25 +136,25 @@ function renderMovie(filteredMovieData, btnType) {
     {
         const deleteFromList = $(`<button class="deleteFromList">Remove</button>`);
         deleteFromList.click(() => {
-            console.log(`Button has been pressed, parent is: ${Id}`);
+            console.log(`Button has been pressed, parent is: ${id}`);
             // Confirm before deleting
-            if (confirm(`Are you sure you want to remove "${PrimaryTitle}" from your list?`)) {
-                deleteFromServer(Id, movieDiv);
+            if (confirm(`Are you sure you want to remove "${primaryTitle}" from your list?`)) {
+                deleteFromServer(id, movieDiv);
             }        
         });
 
         upperDiv.append(deleteFromList);
     }
-    const ratingDiv = $(`<div class="rating">${AverageRating}</div>`);
-    const altImgText = `${PrimaryTitle} movie poster`;
-    const imgDiv = $(`<img src="${PrimaryImage}" alt="${altImgText}">`);
+    const ratingDiv = $(`<div class="rating">${averageRating}</div>`);
+    const altImgText = `${primaryTitle} movie poster`;
+    const imgDiv = $(`<img src="${primaryImage}" alt="${altImgText}">`);
 
     upperDiv.append(ratingDiv, imgDiv);
 
-    const titleDiv = $(`<div>${PrimaryTitle}</div>`);
-    const yearDiv = $(`<div>${Year}</div>`);
-    const runtimeDiv = $(`<div>${RuntimeMinutes}</div>`);
-    const descriptionDiv = $(`<div>${Description}</div>`);
+    const titleDiv = $(`<div>${primaryTitle}</div>`);
+    const yearDiv = $(`<div>${year}</div>`);
+    const runtimeDiv = $(`<div>${runtimeMinutes}</div>`);
+    const descriptionDiv = $(`<div>${description}</div>`);
 
     lowerDiv.append(titleDiv, yearDiv, runtimeDiv, descriptionDiv);
 }
@@ -251,17 +251,17 @@ function renderMyList(moviesFromServer) {
     moviesFromServer.forEach(movie => {
 
         const normalizedMovie = {
-            Id: movie.id,
-            PrimaryTitle: movie.primaryTitle || movie.PrimaryTitle,
-            Description: movie.description || movie.Description,
-            PrimaryImage: movie.primaryImage || movie.PrimaryImage,
-            Year: movie.year,
-            RuntimeMinutes: movie.runtimeMinutes || movie.RuntimeMinutes,
-            AverageRating: movie.averageRating || movie.AverageRating,
-            Language: movie.language || movie.Language,
-            Genres: movie.genres ? (typeof movie.genres === 'string' ? movie.genres : movie.genres.join(',')) : (movie.Genres || ''),
-            IsAdult: movie.isAdult !== undefined ? movie.isAdult : (movie.IsAdult !== undefined ? movie.IsAdult : false),
-            NumVotes: movie.numVotes || movie.NumVotes
+            id: movie.id,
+            primaryTitle: movie.primaryTitle || movie.PrimaryTitle,
+            description: movie.description || movie.Description,
+            primaryImage: movie.primaryImage || movie.PrimaryImage,
+            year: movie.year,
+            runtimeMinutes: movie.runtimeMinutes || movie.RuntimeMinutes,
+            averageRating: movie.averageRating || movie.AverageRating,
+            language: movie.language || movie.Language,
+            genres: movie.genres ? (typeof movie.genres === 'string' ? movie.genres : movie.genres.join(',')) : (movie.Genres || ''),
+            isAdult: movie.isAdult !== undefined ? movie.isAdult : (movie.IsAdult !== undefined ? movie.IsAdult : false),
+            numVotes: movie.numVotes || movie.NumVotes
         };
 
         renderMovie(normalizedMovie, "deleteFromList");
@@ -331,7 +331,3 @@ function setupSearchFunctionality()
     })
 }
 
-function newfunc()
-{
-    
-}
