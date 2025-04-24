@@ -187,7 +187,7 @@ function insertSCB(movieDiv)
     
     movieDiv.find(".addToCartBTN")
             .text("Added")
-            .prop("disabled", true); // Update button text and disable it
+            .prop("disabled", true); // Updates button text and disable it
 }
 
 function insertECB(err)
