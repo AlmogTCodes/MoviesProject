@@ -30,22 +30,32 @@
             </nav>
         </header>
         <main>
-            <!-- Search Sections -->
-            <section class="search-section">
-                <div>
-                    <label for="movieSearch">Search by Title:</label>
-                    <input name="movieSearch" id="movieSearch" type="text" placeholder="Enter movie title...">
-                    <input type="submit" id="titleSearchBTN" value="Search">
-                </div>
-            </section>
+           <!-- Search Sections Wrapper -->
+            <div class="search-controls">
+                <form id="searchByTitleForm"> 
+                    <div>
+                        <label for="movieSearch">Search by Title:</label>
+                        <input name="movieSearch" id="movieSearch" type="text" placeholder="Enter movie title...">
+                    </div>
+                    <div>
+                        <input type="button" id="titleSearchBTN" class="styled-button" value="Search">
+                    </div>
+                </form>
 
-            <section class="search-section" id="searchByDate">
-                 <div>
-                    <label for="movieDate">Search by Release Date (From):</label>
-                    <input type="date" id="movieDate"> 
-                    <input type="submit" id="startDateBTN" value="Search">
-                 </div>
-            </section>
+                <form id="searchByDateForm"> 
+                    <div>
+                        <label for="startDate">Search by Release Date (From):</label>
+                        <input type="date" id="startDate" name="startDate"> 
+                    </div>
+                    <div>
+                        <label for="endDate">Search by Release Date (To):</label>
+                        <input type="date" id="endDate" name="endDate"> 
+                    </div>
+                    <div>
+                        <input type="button" id="dateSearchBTN" class="styled-button" value="Search by Date"> 
+                    </div>
+                </form>
+            </div> <!-- End Search Sections Wrapper -->
 
             <div id="loadedMovies">
                 <!-- Movie Divs will be inserted Dynamically -->
