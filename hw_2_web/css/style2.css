@@ -82,7 +82,7 @@
     left: 10px;
     top: 10px;
     z-index: 2;
-    font-weight: bold;
+    -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     border-radius: 25px;
     padding: 8px 15px;
