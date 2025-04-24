@@ -146,15 +146,17 @@ input[type="submit"]:hover,
 }
 
 /* Specific Button Overrides */
-#loadMoviesBTN {
+#loadMoviesBTN,
+#titleSearchBTN,
+#dateSearchBTN {
     background: linear-gradient(45deg, #ff9800, #ff5722);
-    box-shadow: 0 4px 8px rgba(255, 152, 0, 0.3);
-    font-size: 1.1rem;
-    padding: 0.8rem 1.8rem;
     margin: 20px 0; /* Keep specific margin */
+    padding: 0.7rem 1.5rem;
 }
 
-#loadMoviesBTN:hover {
+#loadMoviesBTN:hover,
+#titleSearchBTN:hover,
+#dateSearchBTN:hover {
     background: linear-gradient(45deg, #ff5722, #e64a19);
     box-shadow: 0 6px 12px rgba(255, 152, 0, 0.4);
 }
@@ -176,6 +178,7 @@ input[type="submit"]:hover,
     top: 10px;
     z-index: 2;
     font-weight: bold;
+    -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     border-radius: 25px; /* Overrides general button */
     padding: 8px 15px; /* Overrides general button */
@@ -198,7 +201,7 @@ input[type="submit"]:hover,
    Forms & Search
    ========================================================================== */
 
-.search-section {
+.search-controls {
     margin: 1.5rem 0;
     padding: 1.5rem;
     background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
@@ -209,14 +212,14 @@ input[type="submit"]:hover,
     box-sizing: border-box;
 }
 
-.search-section > div {
+.search-controls > div {
     margin-bottom: 15px;
     display: flex; /* Align label and input */
     align-items: center; /* Vertically align */
     gap: 10px; /* Space between label and input */
 }
 
-.search-section label {
+.search-controls label {
     font-weight: bold;
     color: #0277bd;
     /* margin-right: 10px; */ /* Replaced by gap */
@@ -423,17 +426,17 @@ input[type="date"]:focus {
         font-size: 0.9rem;
     }
 
-    .search-section {
+    .search-controls {
         width: 95%; /* Wider search on small screens */
     }
 
-    .search-section > div {
+    .search-controls > div {
         flex-direction: column; /* Stack label and input */
         align-items: flex-start; /* Align items left */
         margin-bottom: 10px;
     }
 
-    .search-section label {
+    .search-controls label {
         min-width: auto; /* Remove min-width */
         margin-bottom: 5px; /* Space below label */
     }
@@ -481,11 +484,6 @@ input[type="date"]:focus {
 
     nav {
         padding: 0.8rem;
-    }
-
-    #loadMoviesBTN {
-        font-size: 1rem;
-        padding: 0.7rem 1.5rem;
     }
 
     .Movie {
