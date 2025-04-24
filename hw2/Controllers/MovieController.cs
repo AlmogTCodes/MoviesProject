@@ -8,6 +8,21 @@ namespace hw2.Controllers
     [ApiController]
     public class MovieController : ControllerBase
     {
+
+        // POST: api/Movie
+        [HttpPost]
+        public bool Post([FromBody] Movie movie)
+        {
+            return movie.Insert();
+        }
+
+        // GET: api/Movie
+        [HttpGet]
+        public IEnumerable<Movie> Get()
+        {
+            return Movie.Read();
+        }
+
         // GET: api/Movie/search?title={title}
         [HttpGet("search")] // this uses the QueryString
         public IEnumerable<Movie> GetByTitle(string title)
@@ -22,25 +37,11 @@ namespace hw2.Controllers
             return Movie.GetByReleaseDate(startDate,endData);  
         }
 
-        // GET: api/Movie
-        [HttpGet]
-        public IEnumerable<Movie> Get()
-        {
-            return Movie.Read();
-        }
-
         // GET: api/Movie/{id}
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
-        }
-
-        // POST: api/Movie
-        [HttpPost]
-        public bool Post([FromBody]Movie movie)
-        {
-            return movie.Insert();
         }
 
         // PUT: api/Movie/{id}
