@@ -51,3 +51,4 @@ hw_2_web/*.log
 # === Publish output ===
 **/publish/
 **/artifacts/
+.fake
