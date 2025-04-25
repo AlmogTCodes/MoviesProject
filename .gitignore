@@ -9,13 +9,10 @@ Thumbs.db
 # === Backend (hw2 - ASP.NET Core) ===
 hw2/bin/
 hw2/obj/
-hw2/.vs/
 hw2/*.user
 hw2/*.csproj.user
-hw2/*.suo
 hw2/*.userosscache
 hw2/*.sln.docstates
-hw2/TestResults/
 
 # Include essential config (excluding secrets)
 !hw2/appsettings.json
@@ -29,6 +26,14 @@ hw_2_web/build/
 hw_2_web/.env
 hw_2_web/*.log
 
+# === Test Project (hw2Tests) ===
+hw2Tests/bin/
+hw2Tests/obj/
+
+# === Test Results ===
+TestResults/
+*.trx
+
 # === Visual Studio IDE settings ===
 .vs/
 .vscode/
@@ -38,7 +43,6 @@ hw_2_web/*.log
 *.pdb
 *.cache
 *.dbmdl
-*.bak
 *.psess
 *.vsp
 *.scc

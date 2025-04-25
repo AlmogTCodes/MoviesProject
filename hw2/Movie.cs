@@ -21,7 +21,8 @@
         private float _averageRating;
         private int _numVotes;
 
-        private static List<Movie> moviesList = new List<Movie>();
+        private static List<Movie> _moviesList = new List<Movie>();
+        private static int _numberOfMovies = 0;
         //--------------------------------------------------------------------------------------------//
         #endregion Properties
 
@@ -34,7 +35,7 @@
         public int Id
         {
             get => _id;
-            set => _id = value;
+            private set => _id = value;
         }
 
         /// <summary>
@@ -163,6 +164,19 @@
             get => _numVotes;
             set => _numVotes = value;
         }
+
+        private static List<Movie> MoviesList 
+        {
+            get => _moviesList;
+            set => _moviesList = value;
+        }
+
+        public static int NumberOfMovies
+        {
+            get => _numberOfMovies;
+            private set => _numberOfMovies = value;
+        }
+
         //--------------------------------------------------------------------------------------------//
         #endregion Get-Set Methods
 
@@ -180,8 +194,8 @@
         public Movie(int id, string url, string primaryTitle, string description, string primaryImage,
                      int year, DateTime releaseDate, string language, double budget, double grossWorldwide,
                      string genres, bool isAdult, int runtimeMinutes, float averageRating, int numVotes)
-        {
-            Id = id;
+        {//NOTE CURRENTLY NOT REMOVING UNSUDE ID parameter
+            Id = NumberOfMovies++;
             Url = url;
             PrimaryTitle = primaryTitle;
             Description = description;
@@ -200,26 +214,41 @@
         //--------------------------------------------------------------------------------------------//
         #endregion Constructors
 
+        #region Temporary Tests Methods
+        //---------------------------------------- Temporary Tests Methods ----------------------------------------//
+
+        public static void ResetMoviesList()
+        {
+            MoviesList.Clear();
+        }
+
+        public static bool ResetNumberOfMovies()
+        {
+            NumberOfMovies = 0;
+            return true;
+        }
+
+        //--------------------------------------------------------------------------------------------//
+        #endregion Temporary Tests Methods
+
         #region Methods
         //---------------------------------------- Methods ----------------------------------------//
 
         /// <summary>
-        /// Inserts this movie into the static moviesList if a movie with the same id and primary title does not already exist.
+        /// Inserts a movie into the static list if a movie with the same ID or Primary Title does not already exist.
+        /// Note: This method modifies a static collection and is not thread-safe.
         /// </summary>
-        /// <returns>
-        /// True if the movie was inserted; otherwise, false.
-        /// </returns>
-        public bool Insert()
+        /// <param name="movieToInsert">The movie object to insert.</param>
+        /// <returns>True if the movie was inserted; otherwise, false (if ID/PrimaryTitle already exists).</returns>
+        public static bool Insert(Movie movieToInsert)
         {
-            foreach (var movie in moviesList)
+            // If PrimaryTitle must also be unique across all movies, add that condition back:
+            if (MoviesList.Any(m => m.Id == movieToInsert.Id || m.PrimaryTitle == movieToInsert.PrimaryTitle))
             {
-                if (movie.Id == this.Id || movie.PrimaryTitle == this.PrimaryTitle)
-                {
-                    return false; // Movie already exists
-                }
+                return false; // Movie with this ID/PrimaryTitle already exists
             }
 
-            moviesList.Add(this);
+            MoviesList.Add(movieToInsert);
             return true; // Insertion successful
         }
 
@@ -230,7 +259,7 @@
         /// <returns>A reference to the static list containing all movies.</returns>
         public static List<Movie> Read()
         {
-            return moviesList;
+            return MoviesList;
         }
 
 
@@ -242,7 +271,7 @@
         public static List<Movie> GetByTitle(string title)
         {
             List<Movie> selectedList = new List<Movie>();
-            foreach (Movie m in moviesList)
+            foreach (Movie m in MoviesList)
             {
                 // Convert both the search title and movie title to lowercase for comparison
                 if (m.PrimaryTitle.ToLower() == title.ToLower())
@@ -263,7 +292,7 @@
         public static List<Movie> GetByReleaseDate(DateTime startDate, DateTime endDate)
         {
             List<Movie> selectedList = new List<Movie>();
-            foreach (Movie m in moviesList)
+            foreach (Movie m in MoviesList)
             {
                 if (m.ReleaseDate >= startDate && m.ReleaseDate <= endDate)
                 {
@@ -282,11 +311,11 @@
         public static bool Delete(int id)
         {
             // Check if the movie already exists in the list by id or primaryTitle
-            foreach (var movie in moviesList)
+            foreach (var movie in MoviesList)
             {
                 if (movie.Id == id)
                 {
-                    moviesList.Remove(movie);
+                    MoviesList.Remove(movie);
                     return true; // Movie has been successfully removed
                 }
             }

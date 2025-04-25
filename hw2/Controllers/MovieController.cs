@@ -13,7 +13,7 @@ namespace hw2.Controllers
         [HttpPost]
         public bool Post([FromBody] Movie movie)
         {
-            return movie.Insert();
+            return Movie.Insert(movie);
         }
 
         // GET: api/Movie
