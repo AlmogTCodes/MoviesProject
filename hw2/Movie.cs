@@ -35,7 +35,7 @@
         public int Id
         {
             get => _id;
-            private set => _id = value;
+            set => _id = value;
         }
 
         /// <summary>
@@ -268,22 +268,27 @@
 
 
         /// <summary>
-        /// Retrieves a list of movies that match the specified primary title.
+        /// Retrieves a list of movies where the primary title contains the specified search string (case-insensitive).
+        /// Handles leading/trailing whitespace in the search string.
         /// </summary>
-        /// <param name="title">The title to search for.</param>
-        /// <returns>A list of movies with the matching title.</returns>
-        public static List<Movie> GetByTitle(string title)
+        /// <param name="titleSubstring">The substring to search for within the movie titles.</param>
+        /// <returns>An enumerable collection of movies whose titles contain the search string.</returns>
+        public static IEnumerable<Movie> GetByTitle(string titleSubstring)
         {
-            List<Movie> selectedList = new List<Movie>();
-            foreach (Movie m in MoviesList)
+            // Trim whitespace on the server-side as well for robustness.
+            // Handle potential null input first.
+            string trimmedSubstring = titleSubstring?.Trim() ?? string.Empty;
+
+            // Check if the trimmed string is null or empty.
+            if (string.IsNullOrEmpty(trimmedSubstring))
             {
-                // Convert both the search title and movie title to lowercase for comparison
-                if (m.PrimaryTitle.ToLower() == title.ToLower())
-                {
-                    selectedList.Add(m);
-                }
+                // Return the entire list if the search string is empty or null.
+                return Movie.Read(); // Changed from Enumerable.Empty<Movie>()
             }
-            return selectedList;
+
+            // Use LINQ Where() with Contains() and StringComparison.OrdinalIgnoreCase.
+            // Use the trimmedSubstring for the comparison.
+            return MoviesList.Where(m => m.PrimaryTitle != null && m.PrimaryTitle.Contains(trimmedSubstring, StringComparison.OrdinalIgnoreCase));
         }
 
 
