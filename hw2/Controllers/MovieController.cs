@@ -9,18 +9,29 @@ namespace hw2.Controllers
     public class MovieController : ControllerBase
     {
 
-        // POST: api/Movie
-        [HttpPost]
-        public bool Post([FromBody] Movie movie)
-        {
-            return Movie.Insert(movie);
-        }
-
         // GET: api/Movie
+        /// <summary>
+        /// Retrieves a collection of all movies in the collection.
+        /// </summary>
+        /// <returns>An enumerable collection containing all movies.</returns>
         [HttpGet]
-        public IEnumerable<Movie> Get()
+        public IEnumerable<Movie> GetAllMovies()
         {
             return Movie.Read();
+        }
+
+        // POST: api/Movie
+        [HttpPost]
+        public ActionResult<Movie> Post([FromBody] Movie movie)
+        {
+            bool inserted = Movie.Insert(movie);
+            if (!inserted)
+            {
+                // Return Conflict (409) if the ID already exists
+                return Conflict("Something went wrong.");
+            }
+            // Return 201 Created with the location of the new resource and the resource itself
+            return CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
         }
 
         // GET: api/Movie/search?title={title}
