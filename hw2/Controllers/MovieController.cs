@@ -21,31 +21,55 @@ namespace hw2.Controllers
         }
 
         // POST: api/Movie
+        /// <summary>
+        /// Creates a new movie resource based on the provided data.
+        /// Checks if a movie with the same ID or Primary Title already exists before inserting.
+        /// </summary>
+        /// <param name="movie">The movie object containing the data for the new movie. Received from the request body.</param>
+        /// <returns>
+        /// An <see cref="ActionResult"/>.
+        /// Returns <see cref="OkObjectResult"/> (HTTP 200 OK) with the new movie if successful.
+        /// Returns <see cref="ConflictObjectResult"/> (HTTP 409 Conflict) if a movie with the same ID or Primary Title already exists.
+        /// </returns>
         [HttpPost]
         public ActionResult<Movie> Post([FromBody] Movie movie)
         {
             bool inserted = Movie.Insert(movie);
             if (!inserted)
             {
-                // Return Conflict (409) if the ID already exists
-                return Conflict("Something went wrong.");
+                // Return Conflict (409) if the ID or Title already exists
+                return Conflict("A movie with the same ID or Primary Title already exists.");
             }
-            // Return 201 Created with the location of the new resource and the resource itself
-            return CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
+            // Return 200
+            return Ok(movie);
         }
 
         // GET: api/Movie/search?title={title}
-        [HttpGet("search")] // this uses the QueryString
-        public IEnumerable<Movie> GetByTitle(string title)
+        /// <summary>
+        /// Searches for movies by title using a query string parameter.
+        /// </summary>
+        /// <param name="title">The movie title (or part of it) to search for. Case-insensitive.</param>
+        /// <returns>A collection of movies matching the title search criteria.</returns>
+        [HttpGet("search")] // Route: /api/Movie/search
+        public IEnumerable<Movie> GetByTitle(string? title) // Binds 'title' from query string (?title=...)
         {
-            return Movie.GetByTitle(title);
+            // If the 'title' parameter from the query string is null (not provided when sent to the API),
+            // the null-coalescing operator (??) provides an empty string to the Movie.GetByTitle method.
+            // The Movie.GetByTitle method handles the logic for an empty or null search string and return all movies.
+            return Movie.GetByTitle(title ?? string.Empty);
         }
 
         // GET: api/Movie/from/{startDate}/until/{endDate}
-        [HttpGet("searchByDate")] // this uses resource routing
-        public IEnumerable<Movie> GetByReleaseDate(DateTime startDate, DateTime endData)
+        /// <summary>
+        /// Retrieves movies released within a specified date range.
+        /// </summary>
+        /// <param name="startDate">The start date of the release period (inclusive).</param>
+        /// <param name="endDate">The end date of the release period (inclusive).</param>
+        /// <returns>An enumerable collection of movies released between the start and end dates.</returns>
+        [HttpGet("from/{startDate}/until/{endDate}")]
+        public IEnumerable<Movie> GetByReleaseDate(DateTime startDate, DateTime endDate)
         {
-            return Movie.GetByReleaseDate(startDate,endData);  
+            return Movie.GetByReleaseDate(startDate,endDate);
         }
 
         // GET: api/Movie/{id}
