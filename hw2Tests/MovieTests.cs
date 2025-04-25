@@ -21,6 +21,7 @@ namespace hw2.Tests
             Movie.ResetNumberOfMovies();
         }
 
+        #region Constructors Tesing
         // Test for the default constructor
         [TestMethod()]
         public void Movie_DefaultConstructor_ShouldCreateInstance()
@@ -59,7 +60,9 @@ namespace hw2.Tests
             Assert.AreEqual(1000, movie.NumVotes);
             Assert.AreEqual(1, Movie.NumberOfMovies); // Counter should be incremented
         }
+        #endregion Constructors Tesing
 
+        #region Insert Static Method Testing
         [TestMethod()]
         public void Insert_Static_New_Movie_Should_Return_True_And_Add_To_List()
         {
@@ -104,11 +107,13 @@ namespace hw2.Tests
             Assert.AreEqual(1, movie2.Id, "Second movie ID should remain 1."); // Verify ID wasn't somehow changed
             Assert.IsFalse(Movie.Read().Any(m => m.Id == 1), "Movie list should not contain the second movie."); // Ensure movie2 wasn't added
         }
+        #endregion Insert Static Method Testing
 
+        #region Read Static Method Testing  
         [TestMethod()]
         public void Read_Static_When_List_Is_Empty_Should_Return_Empty_Enumerable()
         {
-            // Arrange (List is reset in TestInitialize)
+            // Arrange (List is being reset in TestInitialize)
 
             // Act
             var movies = Movie.Read();
@@ -136,5 +141,220 @@ namespace hw2.Tests
             Assert.IsTrue(movies.Any(m => m.Id == 0 && m.PrimaryTitle == "Movie 1"), "Read should contain the first inserted movie.");
             Assert.IsTrue(movies.Any(m => m.Id == 1 && m.PrimaryTitle == "Movie 2"), "Read should contain the second inserted movie.");
         }
+        #endregion Read Static Method Testing
+
+        #region GetByTitle Static Method Testing
+
+        // Helper method to add test data for title/date tests
+        private void SetupTestDataForSearch()
+        {
+            // Constructor assigns ID 0, 1, 2, 3, 4 based on NumberOfMovies counter
+            Movie.Insert(new Movie(99, "url", "The Shawshank Redemption", "desc", "img", 1994, new DateTime(1994, 10, 14), "en", 0, 0, "Drama", false, 142, 9.3f, 2000000));
+            Movie.Insert(new Movie(99, "url", "The Godfather", "desc", "img", 1972, new DateTime(1972, 3, 24), "en", 0, 0, "Crime", false, 175, 9.2f, 1500000));
+            Movie.Insert(new Movie(99, "url", "The Dark Knight", "desc", "img", 2008, new DateTime(2008, 7, 18), "en", 0, 0, "Action", false, 152, 9.0f, 2200000));
+            Movie.Insert(new Movie(99, "url", "Pulp Fiction", "desc", "img", 1994, new DateTime(1994, 10, 14), "en", 0, 0, "Crime", false, 154, 8.9f, 1700000));
+            Movie.Insert(new Movie(99, "url", "Schindler's List", "desc", "img", 1993, new DateTime(1994, 2, 4), "en", 0, 0, "Biography", false, 195, 8.9f, 1100000)); // Released early 1994
+            // NumberOfMovies should now be 5
+        }
+
+        [TestMethod()]
+        public void GetByTitle_Partial_Match_Returns_Matching_Movies()
+        {
+            // Arrange
+            SetupTestDataForSearch();
+            string searchTerm = "dark"; // Should match "The Dark Knight"
+
+            // Act
+            var results = Movie.GetByTitle(searchTerm).ToList();
+
+            // Assert
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual("The Dark Knight", results[0].PrimaryTitle);
+            Assert.AreEqual(2, results[0].Id); // Verify correct movie ID (was 3rd inserted)
+        }
+
+        [TestMethod()]
+        public void GetByTitle_Multiple_Matches_Returns_All_Matching_Movies()
+        {
+            // Arrange
+            SetupTestDataForSearch();
+            string searchTerm = "the"; // Should match "The Shawshank...", "The Godfather", "The Dark Knight"
+
+            // Act
+            var results = Movie.GetByTitle(searchTerm).ToList();
+
+            // Assert
+            Assert.AreEqual(3, results.Count);
+            Assert.IsTrue(results.Any(m => m.PrimaryTitle == "The Shawshank Redemption"));
+            Assert.IsTrue(results.Any(m => m.PrimaryTitle == "The Godfather"));
+            Assert.IsTrue(results.Any(m => m.PrimaryTitle == "The Dark Knight"));
+        }
+
+        [TestMethod()]
+        public void GetByTitle_Exact_Match_Case_Insensitive_Returns_Matching_Movie()
+        {
+            // Arrange
+            SetupTestDataForSearch();
+            string searchTerm = "the godfather"; // Lowercase
+
+            // Act
+            var results = Movie.GetByTitle(searchTerm).ToList();
+
+            // Assert
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual("The Godfather", results[0].PrimaryTitle);
+            Assert.AreEqual(1, results[0].Id); // Verify correct movie ID (was 2nd inserted)
+        }
+
+        [TestMethod()]
+        public void GetByTitle_No_Match_Returns_Empty_List()
+        {
+            // Arrange
+            SetupTestDataForSearch();
+            string searchTerm = "NonExistentMovie";
+
+            // Act
+            var results = Movie.GetByTitle(searchTerm).ToList();
+
+            // Assert
+            Assert.AreEqual(0, results.Count);
+        }
+
+        [TestMethod()]
+        public void GetByTitle_Empty_String_Returns_All_Movies()
+        {
+            // Arrange
+            SetupTestDataForSearch();
+            string searchTerm = "";
+            int expectedCount = Movie.NumberOfMovies; // Get count after setup
+
+            // Act
+            var results = Movie.GetByTitle(searchTerm).ToList();
+
+            // Assert
+            Assert.AreEqual(expectedCount, results.Count);
+            Assert.AreEqual(5, results.Count); // Explicit check based on SetupTestDataForSearch
+        }
+
+        [TestMethod()]
+        public void GetByTitle_Null_String_Returns_All_Movies()
+        {
+            // Arrange
+            SetupTestDataForSearch();
+            string? searchTerm = null;
+            int expectedCount = Movie.NumberOfMovies;
+
+            // Act
+            var results = Movie.GetByTitle(searchTerm).ToList();
+
+            // Assert
+            Assert.AreEqual(expectedCount, results.Count);
+            Assert.AreEqual(5, results.Count);
+        }
+
+        [TestMethod()]
+        public void GetByTitle_Whitespace_String_Returns_All_Movies()
+        {
+            // Arrange
+            SetupTestDataForSearch();
+            string searchTerm = "   ";
+            int expectedCount = Movie.NumberOfMovies;
+
+            // Act
+            var results = Movie.GetByTitle(searchTerm).ToList();
+
+            // Assert
+            Assert.AreEqual(expectedCount, results.Count);
+            Assert.AreEqual(5, results.Count);
+        }
+        #endregion GetByTitle Static Method Testing
+
+        #region GetByReleaseDate Static Method Testing
+
+        [TestMethod()]
+        public void GetByReleaseDate_RangeIncludesMultipleMovies_ReturnsMatchingMovies()
+        {
+            // Arrange
+            SetupTestDataForSearch();
+            DateTime startDate = new DateTime(1994, 1, 1);
+            DateTime endDate = new DateTime(1994, 12, 31);
+
+            // Act
+            // Note: Your implementation returns List<Movie>, not IEnumerable<Movie>
+            var results = Movie.GetByReleaseDate(startDate, endDate);
+
+            // Assert
+            Assert.AreEqual(3, results.Count); // Shawshank (Oct 14), Pulp Fiction (Oct 14), Schindler's List (Feb 4)
+            Assert.IsTrue(results.Any(m => m.Id == 0)); // Shawshank
+            Assert.IsTrue(results.Any(m => m.Id == 3)); // Pulp Fiction
+            Assert.IsTrue(results.Any(m => m.Id == 4)); // Schindler's List
+        }
+
+        [TestMethod()]
+        public void GetByReleaseDate_RangeIncludesOneMovie_ReturnsSingleMovie()
+        {
+            // Arrange
+            SetupTestDataForSearch();
+            DateTime startDate = new DateTime(2008, 1, 1);
+            DateTime endDate = new DateTime(2008, 12, 31);
+
+            // Act
+            var results = Movie.GetByReleaseDate(startDate, endDate);
+
+            // Assert
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(2, results[0].Id); // The Dark Knight (July 18, 2008)
+        }
+
+        [TestMethod()]
+        public void GetByReleaseDate_ExactDateMatch_ReturnsMatchingMovies()
+        {
+            // Arrange
+            SetupTestDataForSearch();
+            // Test inclusive behavior of >= and <=
+            DateTime exactDate = new DateTime(1994, 10, 14);
+
+            // Act
+            var results = Movie.GetByReleaseDate(exactDate, exactDate);
+
+            // Assert
+            Assert.AreEqual(2, results.Count); // Shawshank, Pulp Fiction released on this exact date
+            Assert.IsTrue(results.Any(m => m.Id == 0)); // Shawshank
+            Assert.IsTrue(results.Any(m => m.Id == 3)); // Pulp Fiction
+        }
+
+        [TestMethod()]
+        public void GetByReleaseDate_RangeIncludesNoMovies_ReturnsEmptyList()
+        {
+            // Arrange
+            SetupTestDataForSearch();
+            DateTime startDate = new DateTime(2020, 1, 1);
+            DateTime endDate = new DateTime(2021, 12, 31);
+
+            // Act
+            var results = Movie.GetByReleaseDate(startDate, endDate);
+
+            // Assert
+            Assert.AreEqual(0, results.Count);
+        }
+
+        [TestMethod()]
+        public void GetByReleaseDate_StartDateAfterEndDate_ReturnsEmptyList()
+        {
+            // Arrange
+            SetupTestDataForSearch();
+            DateTime startDate = new DateTime(2000, 1, 1);
+            DateTime endDate = new DateTime(1990, 1, 1); // End date is before start date
+
+            // Act
+            var results = Movie.GetByReleaseDate(startDate, endDate);
+
+            // Assert
+            // Your current implementation's loop condition (m.ReleaseDate >= startDate && m.ReleaseDate <= endDate)
+            // will naturally result in no matches when startDate > endDate.
+            Assert.AreEqual(0, results.Count);
+        }
+
+        #endregion GetByReleaseDate Static Method Testing
     }
 }
