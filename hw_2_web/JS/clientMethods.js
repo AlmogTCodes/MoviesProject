@@ -210,17 +210,106 @@ function ajaxCall(method, api, data, successCB, errorCB) {
 
 //---------------------------------------------- Page 2 Methods ----------------------------------------------------
 
+//Being executed in MyCollection Page
 function loadMyList()
 {
-    //Set up action when searhc bar is active
-    //$("#searchForm").attr("action", `${getUrl}/search`);
-    console.log("Hello");
+    console.log("Setting up search functionality...");
+    
     setupSearchFunctionality();
+    setupDateSearchFunctionality();
 
-    //Need to add logic to use Get api that return list of all movies and load it into divs using helper functions
-
-    // Get all movies from server and render them
     getAllMoviesListFromServer();
+}
+
+function setupSearchFunctionality()
+{
+    $(`#searchByTitleForm`).submit((event) => {
+        event.preventDefault();
+
+        const movieTitle = $("input[name='movieSearch']").val();
+        console.log(`Searching for movies with title: ${movieTitle}`);
+
+        searchMoviesByTitle(movieTitle);
+    })
+}
+
+function searchMoviesByTitle(movieTitle) {
+    const normalizedTitle = movieTitle.toLowerCase(); // Convert search input to lowercase
+    const titleSearchUrl = `${searchUrl}?title=${encodeURIComponent(normalizedTitle)}`; // Send normalized title
+    ajaxCall(
+        "GET",
+        titleSearchUrl,
+        "",
+        (searchResult) => {
+            console.log("Search Result: ", searchResult);
+            // Clear existing movies first to avoid duplicates
+            $("#loadedMovies").empty();
+                        
+            if (!searchResult || searchResult.length === 0) {
+                $("#loadedMovies").append("<p>No matching movies have been found.</p>");
+                return;
+            }
+            renderMyList(searchResult);
+        },
+        (err) => {
+            console.error(`Error searching movies: ${err}`);
+            alert("Error occurred while searching. Please try again.");
+        }
+    );
+}
+
+function setupDateSearchFunctionality() {
+    $('#searchByDateForm').submit((event) => {
+        event.preventDefault(); // Prevent default form submission
+
+        const startDate = $('#startDate').val();
+        const endDate = $('#endDate').val();
+
+        if (!startDate || !endDate) {
+            alert("Please select both a start and end date.");
+            return; 
+        }
+        if (startDate > endDate) {
+            alert("Start date cannot be after end date.");
+            return;
+        }
+
+        console.log(`Searching for movies between ${startDate} and ${endDate}`);
+
+        // --- You need to implement this function ---
+        searchMoviesByDate(startDate, endDate); 
+        // -----------------------------------------
+    });
+}
+
+function searchMoviesByDate(startDate, endDate){
+    const dateSearchUrl = `${getUrl}/from/${encodeURIComponent(startDate)}/until/${encodeURIComponent(endDate)}`;
+
+    console.log(`Making AJAX call to: ${dateSearchUrl}`);
+
+    ajaxCall(
+        "GET",
+        dateSearchUrl, 
+        "",
+        (searchResult) => {
+            console.log("Date Search Result: ", searchResult);
+            // Clear existing movies first to avoid duplicates
+            $("#loadedMovies").empty();
+                        
+            if (!searchResult || searchResult.length === 0) {
+                $("#loadedMovies").append("<p>No matching movies have been found.</p>");
+                return;
+            }
+            renderMyList(searchResult); 
+        },
+        (err) => {
+            // Log the detailed error object if available
+            console.error(`Error searching movies by date:`, err); 
+            alert("Error occurred while searching by date. Please check the console and try again.");
+            // Optionally, clear the list or show an error message in the list area
+            // $("#loadedMovies").empty().append("<p>Error loading movies.</p>");
+        }
+    );
 }
 
 function getAllMoviesListFromServer()
@@ -247,7 +336,7 @@ function renderMyList(moviesFromServer) {
         return;
     }
     
-    // Render each movie with the delete button (fixed the typo "dedeleteFromListke")
+    // Render each movie with the delete button
     moviesFromServer.forEach(movie => {
 
         const normalizedMovie = {
@@ -267,16 +356,7 @@ function renderMyList(moviesFromServer) {
         renderMovie(normalizedMovie, "deleteFromList");
     });
 }
-// This will fetch the latest movies from the server and render them on the page
-$(document).ready(function () {
-    // Attach click event to the reload button
-    $("#reloadMoviesBTN").click(function () {
-        console.log("Reloading movies...");
-        getAllMoviesListFromServer(); // Fetch and render the latest movies
-    });
-});
-
-
+//-------------------- END OF SEARCH METHODS ------------------------------
 
 // Utility function to delete a movie from the server
 function deleteFromServer(movieId, movieDiv) {
@@ -301,33 +381,3 @@ function deleteFromServer(movieId, movieDiv) {
         }
     );
 }
-
-function searchMoviesByTitle(movieTitle) {
-    const normalizedTitle = movieTitle.toLowerCase(); // Convert search input to lowercase
-    ajaxCall(
-        "GET",
-        `${searchUrl}?title=${encodeURIComponent(normalizedTitle)}`, // Send normalized title
-        "",
-        (searchResult) => {
-            console.log("Search Result: ", searchResult);
-            renderMyList(searchResult);
-        },
-        (err) => {
-            console.error(`Error searching movies: ${err}`);
-            alert("Error occurred while searching. Please try again.");
-        }
-    );
-}
-
-
-function setupSearchFunctionality()
-{
-    $(`#titleSearchBTN`).click(() => {
-
-        const movieTitle = $("input[name='movieSearch']").val();
-        console.log(`Searching for movies with title: ${movieTitle}`);
-
-        searchMoviesByTitle(movieTitle);
-    })
-}
-
