@@ -254,12 +254,16 @@
 
 
         /// <summary>
-        /// Retrieves the complete list of movies.
+        /// Retrieves a read-only collection of all movies.
+        /// Returning As ReadOnly prevents external modification of the internal list.
         /// </summary>
-        /// <returns>A reference to the static list containing all movies.</returns>
-        public static List<Movie> Read()
+        /// <returns>A read-only collection containing all movies.</returns> 
+        public static IEnumerable<Movie> Read()
         {
-            return MoviesList;
+            // Return a read-only wrapper or a copy to prevent modification of the original list
+            // return moviesList.AsReadOnly();
+            // Or return a copy if the caller might need to modify their copy:
+            return MoviesList.ToList(); // Returning a copy is often safer for web scenarios
         }
 
 

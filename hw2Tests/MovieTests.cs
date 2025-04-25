@@ -37,7 +37,7 @@ namespace hw2.Tests
         public void Movie_Parameterized_Constructor_Should_Set_Properties()
         {
             // Arrange
-            var releaseDate = new DateTime(2023-1-1);
+            var releaseDate = new DateTime(2023 - 1 - 1);
 
             // Act - Note: The constructor uses NumberOfMovies++ for Id, so the passed id is ignored.
             var movie = new Movie(0, "url", "Test Title", "desc", "img", 2023, releaseDate, "en", 100, 200, "Action", false, 120, 8.5f, 1000);
@@ -66,14 +66,14 @@ namespace hw2.Tests
             // Arrange
             // Constructor assigns ID using NumberOfMovies++, so first movie gets ID 0
             var movie = new Movie(99, "url1", "Insert Static Test", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
-            int initialCount = Movie.Read().Count; // Should be 0 after TestInitialize
+            int initialCount = Movie.Read().Count(); // Should be 0 after TestInitialize
 
             // Act
             bool result = Movie.Insert(movie); // Use the static Insert method
 
             // Assert
             Assert.IsTrue(result, "Static Insert should return true for a new movie.");
-            Assert.AreEqual(initialCount + 1, Movie.Read().Count, "Movie list count should increase by 1.");
+            Assert.AreEqual(initialCount + 1, Movie.Read().Count(), "Movie list count should increase by 1.");
             Assert.AreEqual(0, movie.Id, "Movie ID should have been assigned by constructor."); // Verify ID assignment
             Assert.IsTrue(Movie.Read().Contains(movie), "Movie list should contain the inserted movie.");
             Assert.AreEqual(1, Movie.NumberOfMovies, "NumberOfMovies should be incremented by constructor.");
@@ -91,7 +91,7 @@ namespace hw2.Tests
             var movie2 = new Movie(1, "url2", "Existing Title Test", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
             // NumberOfMovies is now 2
 
-            int listCountBeforeInsert = Movie.Read().Count; // Should be 1
+            int listCountBeforeInsert = Movie.Read().Count(); // Should be 1
             int movieCountBeforeInsert = Movie.NumberOfMovies; // Should be 2
 
             // Act
@@ -99,10 +99,42 @@ namespace hw2.Tests
 
             // Assert
             Assert.IsFalse(result, "Static Insert should return false for a movie with an existing Title.");
-            Assert.AreEqual(listCountBeforeInsert, Movie.Read().Count, "Movie list count should not change.");
+            Assert.AreEqual(listCountBeforeInsert, Movie.Read().Count(), "Movie list count should not change.");
             Assert.AreEqual(movieCountBeforeInsert, Movie.NumberOfMovies, "NumberOfMovies should not be changed by failed Insert.");
             Assert.AreEqual(1, movie2.Id, "Second movie ID should remain 1."); // Verify ID wasn't somehow changed
             Assert.IsFalse(Movie.Read().Any(m => m.Id == 1), "Movie list should not contain the second movie."); // Ensure movie2 wasn't added
+        }
+
+        [TestMethod()]
+        public void Read_Static_When_List_Is_Empty_Should_Return_Empty_Enumerable()
+        {
+            // Arrange (List is reset in TestInitialize)
+
+            // Act
+            var movies = Movie.Read();
+
+            // Assert
+            Assert.IsNotNull(movies, "Read should return an enumerable, not null.");
+            Assert.AreEqual(0, movies.Count(), "Read should return an empty enumerable when the list is empty.");
+        }
+
+        [TestMethod()]
+        public void Read_Static_When_List_Has_Movies_Should_Return_All_Movies()
+        {
+            // Arrange
+            var movie1 = new Movie(0, "url1", "Movie 1", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
+            var movie2 = new Movie(1, "url2", "Movie 2", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
+            Movie.Insert(movie1);
+            Movie.Insert(movie2);
+
+            // Act
+            var movies = Movie.Read();
+
+            // Assert
+            Assert.IsNotNull(movies);
+            Assert.AreEqual(2, movies.Count(), "Read should return the correct number of movies.");
+            Assert.IsTrue(movies.Any(m => m.Id == 0 && m.PrimaryTitle == "Movie 1"), "Read should contain the first inserted movie.");
+            Assert.IsTrue(movies.Any(m => m.Id == 1 && m.PrimaryTitle == "Movie 2"), "Read should contain the second inserted movie.");
         }
     }
 }
