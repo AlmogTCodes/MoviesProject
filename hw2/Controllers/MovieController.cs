@@ -38,7 +38,7 @@ namespace hw2.Controllers
             if (!inserted)
             {
                 // Return Conflict (409) if the ID or Title already exists
-                return Conflict("A movie with the same ID or Primary Title already exists.");
+                return Conflict("An error occurred while processing your request.");
             }
             // Return 200
             return Ok(movie);
