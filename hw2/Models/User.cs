@@ -136,6 +136,9 @@ namespace hw2.Models
             // If the user ID is the default 0, assign a new unique ID
             userToInsert.Id = IdCounter++; // Assign current counter value, then increment.
 
+            // Set Active to true by default for new registrations
+            userToInsert.Active = true;
+
             // Add the user to the list
             UsersList.Add(userToInsert);
             return true; // Insertion successful
