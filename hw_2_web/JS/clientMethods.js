@@ -49,18 +49,6 @@ function loadMovies() {
 
 // ------------------------------------------------------------------------------------------------------------------
 // Helper function in create server movie
-function extractNumbersFromString(str)
-{
-    let onlyNumbers = "";
-    for(let char of str)
-    {
-        if (char >= '0' && char <= '9')
-        {
-            onlyNumbers += char;
-        }
-    }
-    return onlyNumbers;
-}
 
 function createServerMovie(movieData) {
     const requiredFields = [
@@ -76,10 +64,9 @@ function createServerMovie(movieData) {
         }
     }
 
-    const movieIdOnlyNumbers = extractNumbersFromString(movieData.id);
-    console.log(movieIdOnlyNumbers);
     return {
-        id: numberOfMovies++,
+        // Use a temporary client-side ID for rendering before server interaction
+        id: numberOfMovies++, 
         url: movieData.url,
         primaryTitle: movieData.primaryTitle,
         description: movieData.description,
@@ -337,8 +324,11 @@ function renderMyList(moviesFromServer) {
     // Render each movie with the delete button
     moviesFromServer.forEach(movie => {
 
+        // Normalize movie data received from the server
+        // Handles potential inconsistencies in property casing (e.g., primaryTitle vs. PrimaryTitle)
+        // Also ensures genres is a string
         const normalizedMovie = {
-            id: movie.id,
+            id: movie.id, // Use the ID from the server
             primaryTitle: movie.primaryTitle || movie.PrimaryTitle,
             description: movie.description || movie.Description,
             primaryImage: movie.primaryImage || movie.PrimaryImage,
@@ -367,15 +357,16 @@ function deleteFromServer(movieId, movieDiv) {
             movieDiv.fadeOut(300, function() {
                 $(this).remove();
                 
-                // Check if there are any movies left
+                // Check if there are any movies left after deletion
                 if ($("#loadedMovies .Movie").length === 0) {
-                    $("#loadedMovies").append("<p>No movies in your collection yet.</p>");
+                    $("#loadedMovies").append("<p>Your movie collection is now empty.</p>");
                 }
             });
         },
         (err) => {
-            console.error(`Error deleting movie: ${err}`);
-            alert("Failed to delete movie. Please try again.");
+            // Handle errors during deletion
+            console.error(`Error deleting movie ${movieId}:`, err);
+            alert(`Failed to delete the movie. Please try again. Status: ${err.statusText || 'Unknown error'}`);
         }
     );
 }
