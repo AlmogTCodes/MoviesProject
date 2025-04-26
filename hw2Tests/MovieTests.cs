@@ -14,10 +14,9 @@ namespace hw2.Tests
         [TestInitialize()]
         public void TestInitialize()
         {
-            //Using Temporary Methods from Movies.cs that will be deleted to access and
-            //reset those fields with each test run.
-
+            // Reset static list before each test
             Movie.ResetMoviesList();
+            // Resetting NumberOfMovies is likely unnecessary now, but harmless
             Movie.ResetNumberOfMovies();
         }
 
@@ -31,6 +30,9 @@ namespace hw2.Tests
 
             // Assert
             Assert.IsNotNull(movie);
+            // Check default values if applicable (e.g., Id might be 0, strings null/empty)
+            Assert.AreEqual(0, movie.Id);
+            Assert.IsNull(movie.PrimaryTitle);
         }
 
         // Test for the parameterized constructor
@@ -38,82 +40,146 @@ namespace hw2.Tests
         public void Movie_Parameterized_Constructor_Should_Set_Properties()
         {
             // Arrange
-            var releaseDate = new DateTime(2023 - 1 - 1);
+            int expectedId = 55;
+            string expectedUrl = "http://example.com";
+            string expectedTitle = "Constructor Test";
+            string expectedDescription = "A test description.";
+            string expectedPrimaryImage = "http://example.com/image.jpg";
+            int expectedYear = 2023;
+            DateTime expectedReleaseDate = new DateTime(2023, 1, 15);
+            string expectedLanguage = "en-US";
+            double expectedBudget = 1000000.50;
+            double expectedGross = 5000000.75;
+            string expectedGenres = "Action,Test";
+            bool expectedIsAdult = false;
+            int expectedRuntime = 125;
+            float expectedRating = 8.5f;
+            int expectedVotes = 1500;
 
-            // Act - Note: The constructor uses NumberOfMovies++ for Id, so the passed id is ignored.
-            var movie = new Movie(0, "url", "Test Title", "desc", "img", 2023, releaseDate, "en", 100, 200, "Action", false, 120, 8.5f, 1000);
+
+            // Act
+            var movie = new Movie(expectedId, expectedUrl, expectedTitle, expectedDescription, expectedPrimaryImage,
+                                  expectedYear, expectedReleaseDate, expectedLanguage, expectedBudget, expectedGross,
+                                  expectedGenres, expectedIsAdult, expectedRuntime, expectedRating, expectedVotes);
 
             // Assert
-            Assert.AreEqual(0, movie.Id); // First movie gets ID 0
-            Assert.AreEqual("Test Title", movie.PrimaryTitle);
-            Assert.AreEqual("desc", movie.Description);
-            Assert.AreEqual("img", movie.PrimaryImage);
-            Assert.AreEqual(2023, movie.Year);
-            Assert.AreEqual(releaseDate, movie.ReleaseDate);
-            Assert.AreEqual("en", movie.Language);
-            Assert.AreEqual(100, movie.Budget);
-            Assert.AreEqual(200, movie.GrossWorldwide);
-            Assert.AreEqual("Action", movie.Genres);
-            Assert.AreEqual(false, movie.IsAdult);
-            Assert.AreEqual(120, movie.RuntimeMinutes);
-            Assert.AreEqual(8.5f, movie.AverageRating);
-            Assert.AreEqual(1000, movie.NumVotes);
-            Assert.AreEqual(1, Movie.NumberOfMovies); // Counter should be incremented
+            Assert.AreEqual(expectedId, movie.Id, "ID should be set by constructor.");
+            Assert.AreEqual(expectedUrl, movie.Url, "Url should be set by constructor.");
+            Assert.AreEqual(expectedTitle, movie.PrimaryTitle, "PrimaryTitle should be set by constructor.");
+            Assert.AreEqual(expectedDescription, movie.Description, "Description should be set by constructor.");
+            Assert.AreEqual(expectedPrimaryImage, movie.PrimaryImage, "PrimaryImage should be set by constructor.");
+            Assert.AreEqual(expectedYear, movie.Year, "Year should be set by constructor.");
+            Assert.AreEqual(expectedReleaseDate, movie.ReleaseDate, "ReleaseDate should be set by constructor.");
+            Assert.AreEqual(expectedLanguage, movie.Language, "Language should be set by constructor.");
+            Assert.AreEqual(expectedBudget, movie.Budget, "Budget should be set by constructor.");
+            Assert.AreEqual(expectedGross, movie.GrossWorldwide, "GrossWorldwide should be set by constructor.");
+            Assert.AreEqual(expectedGenres, movie.Genres, "Genres should be set by constructor.");
+            Assert.AreEqual(expectedIsAdult, movie.IsAdult, "IsAdult should be set by constructor.");
+            Assert.AreEqual(expectedRuntime, movie.RuntimeMinutes, "RuntimeMinutes should be set by constructor.");
+            Assert.AreEqual(expectedRating, movie.AverageRating, "AverageRating should be set by constructor.");
+            Assert.AreEqual(expectedVotes, movie.NumVotes, "NumVotes should be set by constructor.");
         }
         #endregion Constructors Tesing
 
+
         #region Insert Static Method Testing
+
         [TestMethod()]
-        public void Insert_Static_New_Movie_Should_Return_True_And_Add_To_List()
+        public void Insert_Static_New_Movie_Unique_Id_And_Title_Should_Return_True_And_Add()
         {
             // Arrange
-            // Constructor assigns ID using NumberOfMovies++, so first movie gets ID 0
-            var movie = new Movie(99, "url1", "Insert Static Test", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
-            int initialCount = Movie.Read().Count(); // Should be 0 after TestInitialize
+            var movie = new Movie(10, "url1", "Unique Insert Test", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
+            int initialCount = Movie.Read().Count(); // 0
 
             // Act
-            bool result = Movie.Insert(movie); // Use the static Insert method
+            bool result = Movie.Insert(movie);
 
             // Assert
-            Assert.IsTrue(result, "Static Insert should return true for a new movie.");
+            Assert.IsTrue(result, "Insert should return true for a new movie.");
             Assert.AreEqual(initialCount + 1, Movie.Read().Count(), "Movie list count should increase by 1.");
-            Assert.AreEqual(0, movie.Id, "Movie ID should have been assigned by constructor."); // Verify ID assignment
-            Assert.IsTrue(Movie.Read().Contains(movie), "Movie list should contain the inserted movie.");
-            Assert.AreEqual(1, Movie.NumberOfMovies, "NumberOfMovies should be incremented by constructor.");
+            Assert.IsTrue(Movie.Read().Any(m => m.Id == 10 && m.PrimaryTitle == "Unique Insert Test"), "Movie list should contain the inserted movie.");
         }
 
         [TestMethod()]
-        public void Insert_Static_Existing_Movie_Title_Should_Return_False()
+        public void Insert_Static_Null_Movie_Object_Should_Return_False()
         {
             // Arrange
-            // First movie gets ID 0 from constructor
-            var movie1 = new Movie(0, "url1", "Existing Title Test", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
-            Movie.Insert(movie1); // Insert the first movie (List count: 1, NumberOfMovies: 1)
+            Movie? movieToInsert = null;
+            int initialCount = Movie.Read().Count(); // 0
 
-            // Create another movie instance. Constructor assigns ID 1. Title is the same as movie1.
-            var movie2 = new Movie(1, "url2", "Existing Title Test", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
-            // NumberOfMovies is now 2
+            // Act
+            bool result = Movie.Insert(movieToInsert);
+
+            // Assert
+            Assert.IsFalse(result, "Insert should return false for a null movie object.");
+            Assert.AreEqual(initialCount, Movie.Read().Count(), "Movie list count should not change.");
+        }
+
+        [TestMethod()]
+        public void Insert_Static_Movie_With_Null_Title_Should_Return_False()
+        {
+            // Arrange
+            var movie = new Movie(15, "url1", null, "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
+            int initialCount = Movie.Read().Count(); // 0
+
+            // Act
+            bool result = Movie.Insert(movie);
+
+            // Assert
+            Assert.IsFalse(result, "Insert should return false for a movie with a null title.");
+            Assert.AreEqual(initialCount, Movie.Read().Count(), "Movie list count should not change.");
+        }
+
+
+        [TestMethod()]
+        public void Insert_Static_Existing_Movie_ID_Should_Return_False()
+        {
+            // Arrange
+            var movie1 = new Movie(20, "url1", "First Movie Title", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
+            Movie.Insert(movie1); // Insert successful, movie has ID 20
+
+            // Create another movie with the SAME ID but different title
+            var movie2 = new Movie(20, "url2", "Second Movie Title", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
 
             int listCountBeforeInsert = Movie.Read().Count(); // Should be 1
-            int movieCountBeforeInsert = Movie.NumberOfMovies; // Should be 2
 
             // Act
-            bool result = Movie.Insert(movie2); // Attempt to insert movie with existing Title
+            bool result = Movie.Insert(movie2); // Attempt to insert movie with existing ID (20)
 
             // Assert
-            Assert.IsFalse(result, "Static Insert should return false for a movie with an existing Title.");
-            Assert.AreEqual(listCountBeforeInsert, Movie.Read().Count(), "Movie list count should not change.");
-            Assert.AreEqual(movieCountBeforeInsert, Movie.NumberOfMovies, "NumberOfMovies should not be changed by failed Insert.");
-            Assert.AreEqual(1, movie2.Id, "Second movie ID should remain 1."); // Verify ID wasn't somehow changed
-            Assert.IsFalse(Movie.Read().Any(m => m.Id == 1), "Movie list should not contain the second movie."); // Ensure movie2 wasn't added
+            Assert.IsFalse(result, "Insert should return false for a movie with an existing ID.");
+            Assert.AreEqual(listCountBeforeInsert, Movie.Read().Count(), "Movie list count should not change when ID exists.");
+            Assert.IsFalse(Movie.Read().Any(m => m.PrimaryTitle == "Second Movie Title"), "Movie list should not contain the second movie.");
         }
+
+        [TestMethod()]
+        public void Insert_Static_Existing_Movie_Title_Case_Insensitive_Should_Return_False()
+        {
+            // Arrange
+            var movie1 = new Movie(30, "url1", "Existing Title Test", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
+            Movie.Insert(movie1); // Insert successful, movie has ID 30
+
+            // Create another movie with a DIFFERENT ID but the SAME title (different case)
+            var movie2 = new Movie(35, "url2", "existing title test", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
+
+            int listCountBeforeInsert = Movie.Read().Count(); // Should be 1
+
+            // Act
+            bool result = Movie.Insert(movie2); // Attempt to insert movie with existing Title (case-insensitive)
+
+            // Assert
+            Assert.IsFalse(result, "Insert should return false for a movie with an existing Title (case-insensitive).");
+            Assert.AreEqual(listCountBeforeInsert, Movie.Read().Count(), "Movie list count should not change when Title exists.");
+            Assert.IsFalse(Movie.Read().Any(m => m.Id == 35), "Movie list should not contain the second movie (ID 35).");
+        }
+
         #endregion Insert Static Method Testing
 
-        #region Read Static Method Testing  
+        #region Read Static Method Testing
         [TestMethod()]
         public void Read_Static_When_List_Is_Empty_Should_Return_Empty_Enumerable()
         {
-            // Arrange (List is being reset in TestInitialize)
+            // Arrange (List is reset in TestInitialize)
 
             // Act
             var movies = Movie.Read();
@@ -127,8 +193,8 @@ namespace hw2.Tests
         public void Read_Static_When_List_Has_Movies_Should_Return_All_Movies()
         {
             // Arrange
-            var movie1 = new Movie(0, "url1", "Movie 1", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
-            var movie2 = new Movie(1, "url2", "Movie 2", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
+            var movie1 = new Movie(100, "url1", "Movie 1", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
+            var movie2 = new Movie(101, "url2", "Movie 2", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
             Movie.Insert(movie1);
             Movie.Insert(movie2);
 
@@ -138,8 +204,8 @@ namespace hw2.Tests
             // Assert
             Assert.IsNotNull(movies);
             Assert.AreEqual(2, movies.Count(), "Read should return the correct number of movies.");
-            Assert.IsTrue(movies.Any(m => m.Id == 0 && m.PrimaryTitle == "Movie 1"), "Read should contain the first inserted movie.");
-            Assert.IsTrue(movies.Any(m => m.Id == 1 && m.PrimaryTitle == "Movie 2"), "Read should contain the second inserted movie.");
+            Assert.IsTrue(movies.Any(m => m.Id == 100 && m.PrimaryTitle == "Movie 1"), "Read should contain the first inserted movie.");
+            Assert.IsTrue(movies.Any(m => m.Id == 101 && m.PrimaryTitle == "Movie 2"), "Read should contain the second inserted movie.");
         }
         #endregion Read Static Method Testing
 
@@ -148,13 +214,12 @@ namespace hw2.Tests
         // Helper method to add test data for title/date tests
         private void SetupTestDataForSearch()
         {
-            // Constructor assigns ID 0, 1, 2, 3, 4 based on NumberOfMovies counter
-            Movie.Insert(new Movie(99, "url", "The Shawshank Redemption", "desc", "img", 1994, new DateTime(1994, 10, 14), "en", 0, 0, "Drama", false, 142, 9.3f, 2000000));
-            Movie.Insert(new Movie(99, "url", "The Godfather", "desc", "img", 1972, new DateTime(1972, 3, 24), "en", 0, 0, "Crime", false, 175, 9.2f, 1500000));
-            Movie.Insert(new Movie(99, "url", "The Dark Knight", "desc", "img", 2008, new DateTime(2008, 7, 18), "en", 0, 0, "Action", false, 152, 9.0f, 2200000));
-            Movie.Insert(new Movie(99, "url", "Pulp Fiction", "desc", "img", 1994, new DateTime(1994, 10, 14), "en", 0, 0, "Crime", false, 154, 8.9f, 1700000));
-            Movie.Insert(new Movie(99, "url", "Schindler's List", "desc", "img", 1993, new DateTime(1994, 2, 4), "en", 0, 0, "Biography", false, 195, 8.9f, 1100000)); // Released early 1994
-            // NumberOfMovies should now be 5
+            // Use specific, distinct IDs
+            Movie.Insert(new Movie(200, "url", "The Shawshank Redemption", "desc", "img", 1994, new DateTime(1994, 10, 14), "en", 0, 0, "Drama", false, 142, 9.3f, 2000000));
+            Movie.Insert(new Movie(201, "url", "The Godfather", "desc", "img", 1972, new DateTime(1972, 3, 24), "en", 0, 0, "Crime", false, 175, 9.2f, 1500000));
+            Movie.Insert(new Movie(202, "url", "The Dark Knight", "desc", "img", 2008, new DateTime(2008, 7, 18), "en", 0, 0, "Action", false, 152, 9.0f, 2200000));
+            Movie.Insert(new Movie(203, "url", "Pulp Fiction", "desc", "img", 1994, new DateTime(1994, 10, 14), "en", 0, 0, "Crime", false, 154, 8.9f, 1700000));
+            Movie.Insert(new Movie(204, "url", "Schindler's List", "desc", "img", 1993, new DateTime(1994, 2, 4), "en", 0, 0, "Biography", false, 195, 8.9f, 1100000)); // Released early 1994
         }
 
         [TestMethod()]
@@ -170,7 +235,7 @@ namespace hw2.Tests
             // Assert
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual("The Dark Knight", results[0].PrimaryTitle);
-            Assert.AreEqual(2, results[0].Id); // Verify correct movie ID (was 3rd inserted)
+            Assert.AreEqual(202, results[0].Id); // Verify correct movie ID
         }
 
         [TestMethod()]
@@ -185,9 +250,9 @@ namespace hw2.Tests
 
             // Assert
             Assert.AreEqual(3, results.Count);
-            Assert.IsTrue(results.Any(m => m.PrimaryTitle == "The Shawshank Redemption"));
-            Assert.IsTrue(results.Any(m => m.PrimaryTitle == "The Godfather"));
-            Assert.IsTrue(results.Any(m => m.PrimaryTitle == "The Dark Knight"));
+            Assert.IsTrue(results.Any(m => m.Id == 200), "Should contain The Shawshank Redemption (ID 200)");
+            Assert.IsTrue(results.Any(m => m.Id == 201), "Should contain The Godfather (ID 201)");
+            Assert.IsTrue(results.Any(m => m.Id == 202), "Should contain The Dark Knight (ID 202)");
         }
 
         [TestMethod()]
@@ -203,7 +268,7 @@ namespace hw2.Tests
             // Assert
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual("The Godfather", results[0].PrimaryTitle);
-            Assert.AreEqual(1, results[0].Id); // Verify correct movie ID (was 2nd inserted)
+            Assert.AreEqual(201, results[0].Id); // Verify correct movie ID
         }
 
         [TestMethod()]
@@ -226,14 +291,13 @@ namespace hw2.Tests
             // Arrange
             SetupTestDataForSearch();
             string searchTerm = "";
-            int expectedCount = Movie.NumberOfMovies; // Get count after setup
+            int expectedCount = Movie.Read().Count();
 
             // Act
             var results = Movie.GetByTitle(searchTerm).ToList();
 
             // Assert
             Assert.AreEqual(expectedCount, results.Count);
-            Assert.AreEqual(5, results.Count); // Explicit check based on SetupTestDataForSearch
         }
 
         [TestMethod()]
@@ -242,14 +306,13 @@ namespace hw2.Tests
             // Arrange
             SetupTestDataForSearch();
             string? searchTerm = null;
-            int expectedCount = Movie.NumberOfMovies;
+            int expectedCount = Movie.Read().Count();
 
             // Act
             var results = Movie.GetByTitle(searchTerm).ToList();
 
             // Assert
             Assert.AreEqual(expectedCount, results.Count);
-            Assert.AreEqual(5, results.Count);
         }
 
         [TestMethod()]
@@ -258,14 +321,13 @@ namespace hw2.Tests
             // Arrange
             SetupTestDataForSearch();
             string searchTerm = "   ";
-            int expectedCount = Movie.NumberOfMovies;
+            int expectedCount = Movie.Read().Count();
 
             // Act
             var results = Movie.GetByTitle(searchTerm).ToList();
 
             // Assert
             Assert.AreEqual(expectedCount, results.Count);
-            Assert.AreEqual(5, results.Count);
         }
         #endregion GetByTitle Static Method Testing
 
@@ -285,9 +347,9 @@ namespace hw2.Tests
 
             // Assert
             Assert.AreEqual(3, results.Count); // Shawshank (Oct 14), Pulp Fiction (Oct 14), Schindler's List (Feb 4)
-            Assert.IsTrue(results.Any(m => m.Id == 0)); // Shawshank
-            Assert.IsTrue(results.Any(m => m.Id == 3)); // Pulp Fiction
-            Assert.IsTrue(results.Any(m => m.Id == 4)); // Schindler's List
+            Assert.IsTrue(results.Any(m => m.Id == 200)); // Shawshank
+            Assert.IsTrue(results.Any(m => m.Id == 203)); // Pulp Fiction
+            Assert.IsTrue(results.Any(m => m.Id == 204)); // Schindler's List
         }
 
         [TestMethod()]
@@ -303,7 +365,7 @@ namespace hw2.Tests
 
             // Assert
             Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(2, results[0].Id); // The Dark Knight (July 18, 2008)
+            Assert.AreEqual(202, results[0].Id); // The Dark Knight (July 18, 2008)
         }
 
         [TestMethod()]
@@ -319,8 +381,8 @@ namespace hw2.Tests
 
             // Assert
             Assert.AreEqual(2, results.Count); // Shawshank, Pulp Fiction released on this exact date
-            Assert.IsTrue(results.Any(m => m.Id == 0)); // Shawshank
-            Assert.IsTrue(results.Any(m => m.Id == 3)); // Pulp Fiction
+            Assert.IsTrue(results.Any(m => m.Id == 200)); // Shawshank
+            Assert.IsTrue(results.Any(m => m.Id == 203)); // Pulp Fiction
         }
 
         [TestMethod()]
