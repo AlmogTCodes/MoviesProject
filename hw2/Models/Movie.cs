@@ -235,7 +235,7 @@
                 return false;
             }
 
-            if (MoviesList.Any(m => m.Id == movieToInsert.Id || m.PrimaryTitle != null && m.PrimaryTitle.Equals(movieToInsert.PrimaryTitle, StringComparison.OrdinalIgnoreCase)))
+            if (MoviesList.Any(m => m.Id == movieToInsert.Id || m.PrimaryTitle.Equals(movieToInsert.PrimaryTitle, StringComparison.OrdinalIgnoreCase)))
             {
                 return false; // Movie with this ID/PrimaryTitle already exists
             }
