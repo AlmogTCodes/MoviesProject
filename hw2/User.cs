@@ -7,19 +7,82 @@ namespace hw2
     {
         #region Properties
         //---------------------------------------- Properties ----------------------------------------//
-        private int id;
-        private string name;
-        private string email;
-        private string password;
-        private bool active;
+        private int _id = -1; //default -1 in the insert method meaning not registered yet
+        private string _name;
+        private string _email;
+        private string _password;
+        private bool _active;
 
-        private static List<User> usersList = new List<User>();
+        private static List<User> _usersList = new List<User>();
+        private static int _idCounter = 0;
         //--------------------------------------------------------------------------------------------//
         #endregion Properties
 
+
+        #region Get-Set Methods
+        //---------------------------------------- Get-Set Methods ----------------------------------------//
+
+        public int Id
+        {
+            get => _id;
+            set => _id = value;
+        }
+
+        public string Name
+        {
+            get => _name;
+            set => _name = value;
+        }
+
+        public string Email
+        {
+            get => _email;
+            set => _email = value;
+        }
+
+        public string Password
+        {
+            get => _password;
+            set => _password = value;
+        }
+
+        public bool Active
+        {
+            get => _active;
+            set => _active = value;
+        }
+        public static int IdCounter
+        {
+            get => _idCounter;
+            private set => _idCounter = value;
+        }
+        public static List<User> UsersList
+        {
+            get => _usersList;
+            set => _usersList = value;
+        }
+        //--------------------------------------------------------------------------------------------//
+        #endregion Get-Set Methods
+
+
+        #region Temporary Tests Methods
+        //---------------------------------------- Temporary Tests Methods ----------------------------------------//
+
+        /// <summary>
+        /// Clears the static users list. Intended for testing purposes.
+        /// </summary>
+        public static void ResetUsersList()
+        {
+            UsersList.Clear();
+        }
+
+        //--------------------------------------------------------------------------------------------//
+        #endregion Temporary Tests Methods
+
+
         #region Constructors
         //---------------------------------------- Constructors ----------------------------------------//
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="User"/> class.
         /// </summary>
@@ -44,95 +107,37 @@ namespace hw2
         //--------------------------------------------------------------------------------------------//
         #endregion Constructors
 
-        #region Get-Set Methods
-        //---------------------------------------- Get-Set Methods ----------------------------------------//
-        /// <summary>
-        /// Gets or sets the user identifier.
-        /// </summary>
-        public int Id
-        {
-            get => id;
-            set => id = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        public string Name
-        {
-            get => name;
-            set => name = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the email.
-        /// </summary>
-        public string Email
-        {
-            get => email;
-            set => email = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the password.
-        /// </summary>
-        public string Password
-        {
-            get => password;
-            set => password = value;
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the user is active.
-        /// </summary>
-        public bool Active
-        {
-            get => active;
-            set => active = value;
-        }
-        //--------------------------------------------------------------------------------------------//
-        #endregion Get-Set Methods
-
-        #region Temporary Tests Methods
-        //---------------------------------------- Temporary Tests Methods ----------------------------------------//
-
-        /// <summary>
-        /// Clears the static users list. Intended for testing purposes.
-        /// </summary>
-        public static void ResetUsersList()
-        {
-            usersList.Clear();
-        }
-
-        //--------------------------------------------------------------------------------------------//
-        #endregion Temporary Tests Methods
 
         #region Methods
         //---------------------------------------- Methods ----------------------------------------//
 
         /// <summary>
-        /// Inserts a user into the static usersList if a user with the same id does not already exist.
+        /// Inserts a user into the static usersList if the user is valid, new and the email is unique.
+        /// Assigns a unique ID if the user's ID is -1 (default for new user).
         /// </summary>
         /// <param name="userToInsert">The user object to insert.</param>
         /// <returns>
-        /// True if the user was inserted; otherwise, false (if null or ID already exists).
+        /// True if the user was inserted successfully; otherwise, false.
         /// </returns>
         public static bool Insert(User userToInsert)
         {
-            // Check if the user object itself is null
-            if (userToInsert == null)
+            // Check for null user or not a new user or invalid email
+            if (userToInsert == null || userToInsert.Id != -1 || string.IsNullOrWhiteSpace(userToInsert.Email))
             {
-                return false; // Cannot insert a null user
+                return false; // Cannot insert null user or not new user or user with empty/whitespace email.
             }
 
-            // Check if a user with the same ID already exists
-            if (usersList.Any(user => user.Id == userToInsert.Id))
+            // Check if a user with the same email already exists (case-insensitive)
+            if (UsersList.Any(user => user.Email.Equals(userToInsert.Email, StringComparison.OrdinalIgnoreCase)))
             {
-                return false; // User with this ID already exists
+                return false; // User with this email already exists
             }
 
-            // If ID is unique and user is not null, add to the list
-            usersList.Add(userToInsert);
+            // If the user ID is the default -1, assign a new unique ID
+            userToInsert.Id = IdCounter++; // Assign current counter value, then increment.
+
+            // Add the user to the list
+            UsersList.Add(userToInsert);
             return true; // Insertion successful
         }
 
@@ -145,7 +150,7 @@ namespace hw2
         public static IEnumerable<User> Read()
         {
             // Return a copy of the list to prevent modification of the original static list
-            return usersList.ToList();
+            return UsersList.ToList();
         }
         //--------------------------------------------------------------------------------------------//
         #endregion Methods
