@@ -45,8 +45,8 @@ namespace hw2.Controllers
             return "value";
         }
 
-        // POST api/<UserController>
-        [HttpPost]
+        // POST api/User/register <-- CHANGE ROUTE HERE
+        [HttpPost("register")]
         public ActionResult<object> Post([FromBody] User user) // Changed return type to match AuthController for consistency
         {
             if (!ModelState.IsValid)
