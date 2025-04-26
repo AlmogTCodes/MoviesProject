@@ -16,8 +16,6 @@ namespace hw2.Tests
         {
             // Reset static list before each test
             Movie.ResetMoviesList();
-            // Resetting NumberOfMovies is likely unnecessary now, but harmless
-            Movie.ResetNumberOfMovies();
         }
 
         #region Constructors Tesing

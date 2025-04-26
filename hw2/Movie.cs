@@ -22,7 +22,7 @@
         private int _numVotes;
 
         private static List<Movie> _moviesList = new List<Movie>();
-        private static int _numberOfMovies = 0;
+
         //--------------------------------------------------------------------------------------------//
         #endregion Properties
 
@@ -171,12 +171,6 @@
             set => _moviesList = value;
         }
 
-        public static int NumberOfMovies
-        {
-            get => _numberOfMovies;
-            private set => _numberOfMovies = value;
-        }
-
         //--------------------------------------------------------------------------------------------//
         #endregion Get-Set Methods
 
@@ -220,12 +214,6 @@
         public static void ResetMoviesList()
         {
             MoviesList.Clear();
-        }
-
-        public static bool ResetNumberOfMovies()
-        {
-            NumberOfMovies = 0;
-            return true;
         }
 
         //--------------------------------------------------------------------------------------------//
