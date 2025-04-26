@@ -1,5 +1,6 @@
 ﻿using hw2.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -7,6 +8,7 @@ namespace hw2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize] // Apply authorization to the entire controller by default
     public class MovieController : ControllerBase
     {
 
@@ -16,6 +18,7 @@ namespace hw2.Controllers
         /// </summary>
         /// <returns>An enumerable collection containing all movies.</returns>
         [HttpGet]
+        [AllowAnonymous] // Allow anonymous access specifically for this endpoint
         public IEnumerable<Movie> GetAllMovies()
         {
             return Movie.Read();
