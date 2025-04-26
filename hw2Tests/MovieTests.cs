@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using hw2.Models;
 
-namespace hw2.Tests
+namespace hw2Tests
 {
     [TestClass()]
     public class MovieTests
