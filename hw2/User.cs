@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace hw2
 {
@@ -92,37 +93,59 @@ namespace hw2
         //--------------------------------------------------------------------------------------------//
         #endregion Get-Set Methods
 
+        #region Temporary Tests Methods
+        //---------------------------------------- Temporary Tests Methods ----------------------------------------//
+
+        /// <summary>
+        /// Clears the static users list. Intended for testing purposes.
+        /// </summary>
+        public static void ResetUsersList()
+        {
+            usersList.Clear();
+        }
+
+        //--------------------------------------------------------------------------------------------//
+        #endregion Temporary Tests Methods
+
         #region Methods
         //---------------------------------------- Methods ----------------------------------------//
-        
+
         /// <summary>
-        /// Inserts this user into the static usersList if a user with the same id does not already exist.
+        /// Inserts a user into the static usersList if a user with the same id does not already exist.
         /// </summary>
+        /// <param name="userToInsert">The user object to insert.</param>
         /// <returns>
-        /// True if the user was inserted; otherwise, false.
+        /// True if the user was inserted; otherwise, false (if null or ID already exists).
         /// </returns>
-        public bool Insert()
+        public static bool Insert(User userToInsert)
         {
-            foreach (var user in usersList)
+            // Check if the user object itself is null
+            if (userToInsert == null)
             {
-                if (user.id == this.id)
-                {
-                    return false; // User already exists
-                }
+                return false; // Cannot insert a null user
             }
-            usersList.Add(this);
+
+            // Check if a user with the same ID already exists
+            if (usersList.Any(user => user.Id == userToInsert.Id))
+            {
+                return false; // User with this ID already exists
+            }
+
+            // If ID is unique and user is not null, add to the list
+            usersList.Add(userToInsert);
             return true; // Insertion successful
         }
 
         /// <summary>
-        /// Retrieves the complete list of users.
+        /// Retrieves a copy of the complete list of users.
         /// </summary>
         /// <returns>
-        /// A reference to the static list containing all users.
+        /// An enumerable collection containing all users.
         /// </returns>
-        public List<User> Read()
+        public static IEnumerable<User> Read()
         {
-            return usersList;
+            // Return a copy of the list to prevent modification of the original static list
+            return usersList.ToList();
         }
         //--------------------------------------------------------------------------------------------//
         #endregion Methods

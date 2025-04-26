@@ -246,10 +246,9 @@
 
 
         /// <summary>
-        /// Retrieves a read-only collection of all movies.
-        /// Returning As ReadOnly prevents external modification of the internal list.
+        /// Retrieves a copy of the complete list of movies.
         /// </summary>
-        /// <returns>A read-only collection containing all movies.</returns> 
+        /// <returns>An enumerable collection containing all movies.</returns> 
         public static IEnumerable<Movie> Read()
         {
             // Return a read-only wrapper or a copy to prevent modification of the original list
