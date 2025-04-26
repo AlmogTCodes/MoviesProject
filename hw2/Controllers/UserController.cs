@@ -16,7 +16,7 @@ namespace hw2.Controllers
             return Models.User.Read();
         }
 
-        // GET api/<UserController>/5
+        // GET api/<UserController>/{id}
         [HttpGet("{id}")]
         public string Get(int id)
         {
