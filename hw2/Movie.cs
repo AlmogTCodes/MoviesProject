@@ -194,8 +194,8 @@
         public Movie(int id, string url, string primaryTitle, string description, string primaryImage,
                      int year, DateTime releaseDate, string language, double budget, double grossWorldwide,
                      string genres, bool isAdult, int runtimeMinutes, float averageRating, int numVotes)
-        {//NOTE CURRENTLY NOT REMOVING UNSUDE ID parameter
-            Id = NumberOfMovies++;
+        {
+            Id = id;
             Url = url;
             PrimaryTitle = primaryTitle;
             Description = description;
@@ -242,8 +242,12 @@
         /// <returns>True if the movie was inserted; otherwise, false (if ID/PrimaryTitle already exists).</returns>
         public static bool Insert(Movie movieToInsert)
         {
-            // If PrimaryTitle must also be unique across all movies, add that condition back:
-            if (MoviesList.Any(m => m.Id == movieToInsert.Id || m.PrimaryTitle == movieToInsert.PrimaryTitle))
+            if (movieToInsert == null || movieToInsert.PrimaryTitle == null)
+            {
+                return false;
+            }
+
+            if (MoviesList.Any(m => m.Id == movieToInsert.Id || (m.PrimaryTitle != null && m.PrimaryTitle.Equals(movieToInsert.PrimaryTitle, StringComparison.OrdinalIgnoreCase))))
             {
                 return false; // Movie with this ID/PrimaryTitle already exists
             }
