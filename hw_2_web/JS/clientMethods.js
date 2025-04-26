@@ -276,9 +276,7 @@ function setupDateSearchFunctionality() {
 
         console.log(`Searching for movies between ${startDate} and ${endDate}`);
 
-        // --- You need to implement this function ---
         searchMoviesByDate(startDate, endDate); 
-        // -----------------------------------------
     });
 }
 
