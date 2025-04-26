@@ -7,14 +7,14 @@ namespace hw2.Models
     {
         #region Properties
         //---------------------------------------- Properties ----------------------------------------//
-        private int _id = -1; //default -1 in the insert method meaning not registered yet
+        private int _id = 0; //default 0 in the insert method meaning not registered yet
         private string _name;
         private string _email;
         private string _password;
         private bool _active;
 
         private static List<User> _usersList = new List<User>();
-        private static int _idCounter = 0;
+        private static int _idCounter = 1;
         //--------------------------------------------------------------------------------------------//
         #endregion Properties
 
@@ -113,7 +113,7 @@ namespace hw2.Models
 
         /// <summary>
         /// Inserts a user into the static usersList if the user is valid, new and the email is unique.
-        /// Assigns a unique ID if the user's ID is -1 (default for new user).
+        /// Assigns a unique ID if the user's ID is 0 (default for new user).
         /// </summary>
         /// <param name="userToInsert">The user object to insert.</param>
         /// <returns>
@@ -122,7 +122,7 @@ namespace hw2.Models
         public static bool Insert(User userToInsert)
         {
             // Check for null user or not a new user or invalid email
-            if (userToInsert == null || userToInsert.Id != -1 || string.IsNullOrWhiteSpace(userToInsert.Email))
+            if (userToInsert == null || userToInsert.Id != 0 || string.IsNullOrWhiteSpace(userToInsert.Email))
             {
                 return false; // Cannot insert null user or not new user or user with empty/whitespace email.
             }
@@ -133,7 +133,7 @@ namespace hw2.Models
                 return false; // User with this email already exists
             }
 
-            // If the user ID is the default -1, assign a new unique ID
+            // If the user ID is the default 0, assign a new unique ID
             userToInsert.Id = IdCounter++; // Assign current counter value, then increment.
 
             // Add the user to the list
