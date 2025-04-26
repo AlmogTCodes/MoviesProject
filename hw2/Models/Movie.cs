@@ -251,9 +251,6 @@
         /// <returns>An enumerable collection containing all movies.</returns> 
         public static IEnumerable<Movie> Read()
         {
-            // Return a read-only wrapper or a copy to prevent modification of the original list
-            // return moviesList.AsReadOnly();
-            // Or return a copy if the caller might need to modify their copy:
             return MoviesList.ToList(); // Returning a copy is often safer for web scenarios
         }
 
