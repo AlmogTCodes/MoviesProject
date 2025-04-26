@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using hw2.Models;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,7 +13,7 @@ namespace hw2.Controllers
         [HttpGet]
         public IEnumerable<User> GetAllUsers()
         {
-            return hw2.User.Read();
+            return Models.User.Read();
         }
 
         // GET api/<UserController>/5
@@ -26,7 +27,7 @@ namespace hw2.Controllers
         [HttpPost]
         public ActionResult<User> Post([FromBody] User user)
         {
-            bool inserted = hw2.User.Insert(user);
+            bool inserted = Models.User.Insert(user);
             if (!inserted)
             {
                 return Conflict("User could not be inserted. Email may already exist or data is invalid.");

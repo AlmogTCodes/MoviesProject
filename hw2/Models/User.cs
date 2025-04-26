@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace hw2
+namespace hw2.Models
 {
     public class User
     {

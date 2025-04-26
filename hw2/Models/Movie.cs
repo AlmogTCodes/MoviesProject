@@ -1,4 +1,4 @@
-﻿namespace hw2
+﻿namespace hw2.Models
 {
     public class Movie
     {
@@ -235,7 +235,7 @@
                 return false;
             }
 
-            if (MoviesList.Any(m => m.Id == movieToInsert.Id || (m.PrimaryTitle != null && m.PrimaryTitle.Equals(movieToInsert.PrimaryTitle, StringComparison.OrdinalIgnoreCase))))
+            if (MoviesList.Any(m => m.Id == movieToInsert.Id || m.PrimaryTitle != null && m.PrimaryTitle.Equals(movieToInsert.PrimaryTitle, StringComparison.OrdinalIgnoreCase)))
             {
                 return false; // Movie with this ID/PrimaryTitle already exists
             }
@@ -274,7 +274,7 @@
             if (string.IsNullOrEmpty(trimmedSubstring))
             {
                 // Return the entire list if the search string is empty or null.
-                return Movie.Read(); // Changed from Enumerable.Empty<Movie>()
+                return Read(); // Changed from Enumerable.Empty<Movie>()
             }
 
             // Use LINQ Where() with Contains() and StringComparison.OrdinalIgnoreCase.
