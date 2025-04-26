@@ -49,6 +49,18 @@ function loadMovies() {
 
 // ------------------------------------------------------------------------------------------------------------------
 // Helper function in create server movie
+function extractNumbersFromString(str)
+{
+    let onlyNumbers = "";
+    for(let char of str)
+    {
+        if (char >= '0' && char <= '9')
+        {
+            onlyNumbers += char;
+        }
+    }
+    return onlyNumbers;
+}
 
 function createServerMovie(movieData) {
     const requiredFields = [
@@ -63,7 +75,9 @@ function createServerMovie(movieData) {
             return; // Stop early if any field is missing
         }
     }
-
+    
+    const movieIdOnlyNumbers = extractNumbersFromString(movieData.id);
+    console.log(movieIdOnlyNumbers);
     return {
         // Use a temporary client-side ID for rendering before server interaction
         id: numberOfMovies++, 
