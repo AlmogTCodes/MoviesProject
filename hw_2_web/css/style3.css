@@ -201,7 +201,7 @@ input[type="submit"]:hover,
    Forms & Search
    ========================================================================== */
 
-.search-controls {
+.search-sections {
     margin: 1.5rem 0;
     padding: 1.5rem;
     background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
@@ -212,14 +212,14 @@ input[type="submit"]:hover,
     box-sizing: border-box;
 }
 
-.search-controls > div {
+.search-sections > div {
     margin-bottom: 15px;
     display: flex; /* Align label and input */
     align-items: center; /* Vertically align */
     gap: 10px; /* Space between label and input */
 }
 
-.search-controls label {
+.search-sections label {
     font-weight: bold;
     color: #0277bd;
     /* margin-right: 10px; */ /* Replaced by gap */
@@ -426,17 +426,17 @@ input[type="date"]:focus {
         font-size: 0.9rem;
     }
 
-    .search-controls {
+    .search-sections {
         width: 95%; /* Wider search on small screens */
     }
 
-    .search-controls > div {
+    .search-sections > div {
         flex-direction: column; /* Stack label and input */
         align-items: flex-start; /* Align items left */
         margin-bottom: 10px;
     }
 
-    .search-controls label {
+    .search-sections label {
         min-width: auto; /* Remove min-width */
         margin-bottom: 5px; /* Space below label */
     }
