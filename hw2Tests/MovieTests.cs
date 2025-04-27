@@ -95,7 +95,9 @@ namespace hw2Tests
             // Assert
             Assert.IsTrue(result, "Insert should return true for a new movie.");
             Assert.AreEqual(initialCount + 1, Movie.Read().Count(), "Movie list count should increase by 1.");
-            Assert.IsTrue(Movie.Read().Any(m => m.Id == 10 && m.PrimaryTitle == "Unique Insert Test"), "Movie list should contain the inserted movie.");
+            var insertedMovie = Movie.Read().FirstOrDefault(m => m.PrimaryTitle == "Unique Insert Test");
+            Assert.IsNotNull(insertedMovie, "Movie list should contain the inserted movie.");
+            Assert.IsTrue(insertedMovie.Id > 0, "Inserted movie should have an ID assigned by the counter.");
         }
 
         [TestMethod()]
@@ -128,27 +130,28 @@ namespace hw2Tests
             Assert.AreEqual(initialCount, Movie.Read().Count(), "Movie list count should not change.");
         }
 
+        // [TestMethod()]
+        // public void Insert_Static_Existing_Movie_ID_Should_Return_False()
+        // {
+        //     // Arrange
+        //     var movie1 = new Movie(20, "url1", "First Movie Title", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
+        //     Movie.Insert(movie1); // Insert successful, movie gets ID from counter (e.g., 1)
 
-        [TestMethod()]
-        public void Insert_Static_Existing_Movie_ID_Should_Return_False()
-        {
-            // Arrange
-            var movie1 = new Movie(20, "url1", "First Movie Title", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
-            Movie.Insert(movie1); // Insert successful, movie has ID 20
+        //     // Create another movie with the SAME input ID (20) but different title
+        //     var movie2 = new Movie(20, "url2", "Second Movie Title", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
 
-            // Create another movie with the SAME ID but different title
-            var movie2 = new Movie(20, "url2", "Second Movie Title", "desc", "img", 2024, DateTime.Now, "en", 1, 2, "Test", false, 90, 7.0f, 50);
+        //     int listCountBeforeInsert = Movie.Read().Count(); // Should be 1
 
-            int listCountBeforeInsert = Movie.Read().Count(); // Should be 1
+        //     // Act
+        //     // Since titles are different, Insert will now SUCCEED and assign a new ID (e.g., 2)
+        //     bool result = Movie.Insert(movie2);
 
-            // Act
-            bool result = Movie.Insert(movie2); // Attempt to insert movie with existing ID (20)
-
-            // Assert
-            Assert.IsFalse(result, "Insert should return false for a movie with an existing ID.");
-            Assert.AreEqual(listCountBeforeInsert, Movie.Read().Count(), "Movie list count should not change when ID exists.");
-            Assert.IsFalse(Movie.Read().Any(m => m.PrimaryTitle == "Second Movie Title"), "Movie list should not contain the second movie.");
-        }
+        //     // Assert
+        //     // This test is no longer valid as Insert ignores input ID and only checks title conflict.
+        //     // Assert.IsFalse(result, "Insert should return false for a movie with an existing ID.");
+        //     // Assert.AreEqual(listCountBeforeInsert, Movie.Read().Count(), "Movie list count should not change when ID exists.");
+        //     // Assert.IsFalse(Movie.Read().Any(m => m.PrimaryTitle == "Second Movie Title"), "Movie list should not contain the second movie.");
+        // }
 
         [TestMethod()]
         public void Insert_Static_Existing_Movie_Title_Case_Insensitive_Should_Return_False()
@@ -202,8 +205,9 @@ namespace hw2Tests
             // Assert
             Assert.IsNotNull(movies);
             Assert.AreEqual(2, movies.Count(), "Read should return the correct number of movies.");
-            Assert.IsTrue(movies.Any(m => m.Id == 100 && m.PrimaryTitle == "Movie 1"), "Read should contain the first inserted movie.");
-            Assert.IsTrue(movies.Any(m => m.Id == 101 && m.PrimaryTitle == "Movie 2"), "Read should contain the second inserted movie.");
+            // Verify by title as IDs are now auto-generated
+            Assert.IsTrue(movies.Any(m => m.PrimaryTitle == "Movie 1"), "Read should contain the first inserted movie.");
+            Assert.IsTrue(movies.Any(m => m.PrimaryTitle == "Movie 2"), "Read should contain the second inserted movie.");
         }
         #endregion Read Static Method Testing
 
@@ -233,7 +237,7 @@ namespace hw2Tests
             // Assert
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual("The Dark Knight", results[0].PrimaryTitle);
-            Assert.AreEqual(202, results[0].Id); // Verify correct movie ID
+            // Verify by title, ID is not predictable
         }
 
         [TestMethod()]
@@ -248,9 +252,10 @@ namespace hw2Tests
 
             // Assert
             Assert.AreEqual(3, results.Count);
-            Assert.IsTrue(results.Any(m => m.Id == 200), "Should contain The Shawshank Redemption (ID 200)");
-            Assert.IsTrue(results.Any(m => m.Id == 201), "Should contain The Godfather (ID 201)");
-            Assert.IsTrue(results.Any(m => m.Id == 202), "Should contain The Dark Knight (ID 202)");
+            // Verify by title as IDs are now auto-generated
+            Assert.IsTrue(results.Any(m => m.PrimaryTitle == "The Shawshank Redemption"), "Should contain The Shawshank Redemption");
+            Assert.IsTrue(results.Any(m => m.PrimaryTitle == "The Godfather"), "Should contain The Godfather");
+            Assert.IsTrue(results.Any(m => m.PrimaryTitle == "The Dark Knight"), "Should contain The Dark Knight");
         }
 
         [TestMethod()]
@@ -266,7 +271,7 @@ namespace hw2Tests
             // Assert
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual("The Godfather", results[0].PrimaryTitle);
-            Assert.AreEqual(201, results[0].Id); // Verify correct movie ID
+            // Verify by title, ID is not predictable
         }
 
         [TestMethod()]
@@ -342,12 +347,14 @@ namespace hw2Tests
             // Act
             // Note: Your implementation returns List<Movie>, not IEnumerable<Movie>
             var results = Movie.GetByReleaseDate(startDate, endDate);
+            var resultTitles = results.Select(m => m.PrimaryTitle).ToList(); // Get titles for debugging
 
             // Assert
-            Assert.AreEqual(3, results.Count); // Shawshank (Oct 14), Pulp Fiction (Oct 14), Schindler's List (Feb 4)
-            Assert.IsTrue(results.Any(m => m.Id == 200)); // Shawshank
-            Assert.IsTrue(results.Any(m => m.Id == 203)); // Pulp Fiction
-            Assert.IsTrue(results.Any(m => m.Id == 204)); // Schindler's List
+            Assert.AreEqual(3, results.Count, $"Expected 3 movies but found {results.Count}. Found titles: [{string.Join(", ", resultTitles)}]"); // Shawshank (Oct 14), Pulp Fiction (Oct 14), Schindler's List (Feb 4)
+            // Verify by title as IDs are now auto-generated
+            Assert.IsTrue(results.Any(m => m.PrimaryTitle == "The Shawshank Redemption"), $"'The Shawshank Redemption' not found in results. Found titles: [{string.Join(", ", resultTitles)}]");
+            Assert.IsTrue(results.Any(m => m.PrimaryTitle == "Pulp Fiction"), $"'Pulp Fiction' not found in results. Found titles: [{string.Join(", ", resultTitles)}]");
+            Assert.IsTrue(results.Any(m => m.PrimaryTitle == "Schindler's List"), $"'Schindler's List' not found in results. Found titles: [{string.Join(", ", resultTitles)}]");
         }
 
         [TestMethod()]
@@ -360,10 +367,18 @@ namespace hw2Tests
 
             // Act
             var results = Movie.GetByReleaseDate(startDate, endDate);
+            var resultTitles = results.Select(m => m.PrimaryTitle).ToList(); // Get titles for debugging
 
             // Assert
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(202, results[0].Id); // The Dark Knight (July 18, 2008)
+            Assert.AreEqual(1, results.Count, $"Expected 1 movie but found {results.Count}. Found titles: [{string.Join(", ", resultTitles)}]");
+            // Verify by title as ID is now auto-generated
+            // Add check to ensure results list is not empty before accessing index 0
+            if (results.Count > 0)
+            {
+                Assert.AreEqual("The Dark Knight", results[0].PrimaryTitle, $"Expected 'The Dark Knight' but found '{results[0].PrimaryTitle}'.");
+            }
+            // The count assertion already covers the case where the list is empty,
+            // but this prevents potential IndexOutOfRangeException in the message.
         }
 
         [TestMethod()]
@@ -376,11 +391,12 @@ namespace hw2Tests
 
             // Act
             var results = Movie.GetByReleaseDate(exactDate, exactDate);
+            var resultTitles = results.Select(m => m.PrimaryTitle).ToList(); // Get titles for debugging
 
             // Assert
-            Assert.AreEqual(2, results.Count); // Shawshank, Pulp Fiction released on this exact date
-            Assert.IsTrue(results.Any(m => m.Id == 200)); // Shawshank
-            Assert.IsTrue(results.Any(m => m.Id == 203)); // Pulp Fiction
+            Assert.AreEqual(2, results.Count, $"Expected 2 movies but found {results.Count}. Found titles: [{string.Join(", ", resultTitles)}]"); // Shawshank, Pulp Fiction released on this exact date
+            Assert.IsTrue(results.Any(m => m.PrimaryTitle == "The Shawshank Redemption"), $"'The Shawshank Redemption' not found in results. Found titles: [{string.Join(", ", resultTitles)}]"); // Shawshank
+            Assert.IsTrue(results.Any(m => m.PrimaryTitle == "Pulp Fiction"), $"'Pulp Fiction' not found in results. Found titles: [{string.Join(", ", resultTitles)}]"); // Pulp Fiction
         }
 
         [TestMethod()]
