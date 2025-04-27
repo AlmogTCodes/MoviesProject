@@ -7,15 +7,24 @@
     <title>My Movie Collection</title>
     
     <link rel="stylesheet" href="./css/style3.css"> 
+
+    <script>
+        // Define API base URL globally
+        const apiUrlBase = "https://localhost:54200/api"; 
+    </script>
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous">
     </script>
     
+    <script src="./JS/auth.js"></script> <!-- Load auth.js first -->
     <script src="./JS/clientMethods.js"></script>
     <script>
-        $(document).ready(loadMyList);
+        $(document).ready(function() {
+            updateUserDisplay(); // Update UI based on login status
+            loadMyList(); // Load the user's movie list
+        });
     </script>
 </head>
 <body>
@@ -31,7 +40,7 @@
         </header>
         <main>
             <!-- Search Sections Wrapper -->
-            <div class="search-controls">
+            <div class="search-section">
                 <form id="searchByTitleForm"> 
                     <div>
                         <label for="movieSearch">Search by Title:</label>
