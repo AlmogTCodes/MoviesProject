@@ -22,6 +22,7 @@
         private int _numVotes;
 
         private static List<Movie> _moviesList = new List<Movie>();
+        private static int _nextId = 1; // Static counter for ID generation
 
         //--------------------------------------------------------------------------------------------//
         #endregion Properties
@@ -223,11 +224,12 @@
         //---------------------------------------- Methods ----------------------------------------//
 
         /// <summary>
-        /// Inserts a movie into the static list if a movie with the same ID or Primary Title does not already exist.
+        /// Inserts a movie into the static list if a movie with the same Primary Title does not already exist.
+        /// Assigns a unique ID to the movie before insertion.
         /// Note: This method modifies a static collection and is not thread-safe.
         /// </summary>
         /// <param name="movieToInsert">The movie object to insert.</param>
-        /// <returns>True if the movie was inserted; otherwise, false (if ID/PrimaryTitle already exists).</returns>
+        /// <returns>True if the movie was inserted; otherwise, false (if PrimaryTitle already exists).</returns>
         public static bool Insert(Movie movieToInsert)
         {
             if (movieToInsert == null || movieToInsert.PrimaryTitle == null)
@@ -235,10 +237,14 @@
                 return false;
             }
 
-            if (MoviesList.Any(m => m.Id == movieToInsert.Id || m.PrimaryTitle.Equals(movieToInsert.PrimaryTitle, StringComparison.OrdinalIgnoreCase)))
+            // Only check for title conflict (case-insensitive)
+            if (MoviesList.Any(m => m.PrimaryTitle.Equals(movieToInsert.PrimaryTitle, StringComparison.OrdinalIgnoreCase)))
             {
-                return false; // Movie with this ID/PrimaryTitle already exists
+                return false; // Movie with this PrimaryTitle already exists
             }
+
+            // Assign the next available ID and increment the counter
+            movieToInsert.Id = _nextId++;
 
             MoviesList.Add(movieToInsert);
             return true; // Insertion successful
