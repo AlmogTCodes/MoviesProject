@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Movie</title>
+    <link rel="stylesheet" href="./css/style3.css">
+
+    <script>
+        // Define API base URL globally
+        const apiUrlBase = "https://localhost:54200/api"; 
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous">
+    </script>
+    <!-- Load clientMethods first -->
+    <script src="./JS/clientMethods.js"></script>
+    <!-- Load auth.js -->
+    <script src="./JS/auth.js"></script>
+    <!-- Load addMovie logic -->
+    <script src="./JS/addMovie.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Check login status FIRST
+            if (!isLoggedIn()) {
+                alert("Please log in to add movies.");
+                window.location.href = 'login.html'; // Redirect to login
+                return; // Stop further execution
+            }
+            // If logged in, proceed
+            updateUserDisplay(); // Show user info, logout button etc.
+            setupAddMovieForm(); // Initialize the form logic from addMovie.js
+        });
+    </script>
+    <style>
+        /* Basic form styling */
+        .form-container { max-width: 600px; margin: 30px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9; }
+        .form-container h1 { text-align: center; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input[type="text"],
+        .form-group input[type="url"],
+        .form-group input[type="number"],
+        .form-group input[type="date"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+         .form-group textarea { min-height: 80px; }
+        .form-group input[type="checkbox"] { width: auto; margin-right: 5px; }
+        .form-group button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1.1em; }
+        .form-group button:hover { background-color: #218838; }
+        .error-message { color: red; margin-top: 5px; font-size: 0.9em; display: none; /* Initially hidden */ }
+        input.invalid, textarea.invalid { border-color: red; }
+        datalist { /* Basic styling for datalist dropdown */ }
+    </style>
+</head>
+<body>
+     <div class="container">
+         <header>
+            <h1>Add New Movie</h1>
+             <!-- User Info Area -->
+            <div id="userInfo" style="float: right; margin: 10px; display: none;"></div>
+            <nav>
+                <ul class="nav-list">
+                     <li><a href="index.html" class="styled-button">Home</a></li>
+                    <li><a id="myCollectionLink" href="MyMovies.html" class="styled-button">My Collection</a></li>
+                    <li><a id="addMovieLink" href="addMovie.html" class="styled-button">Add Movie</a></li>
+                    <li><a id="loginLink" href="login.html" class="styled-button" style="display: none;">Login</a></li>
+                    <li><button id="logoutButton" class="styled-button" style="display: none; background-color: #dc3545;">Logout</button></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <div class="form-container">
+                <form id="addMovieForm">
+                    <!-- Required Fields -->
+                    <div class="form-group">
+                        <label for="primaryTitle">Title <span style="color:red">*</span>:</label>
+                        <input type="text" id="primaryTitle" name="primaryTitle" required>
+                        <div class="error-message" id="primaryTitleError"></div>
+                    </div>
+                     <div class="form-group">
+                        <label for="primaryImage">Image URL <span style="color:red">*</span>:</label>
+                        <input type="url" id="primaryImage" name="primaryImage" placeholder="https://example.com/image.jpg" required>
+                         <div class="error-message" id="primaryImageError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Year <span style="color:red">*</span>:</label>
+                        <input type="number" id="year" name="year" min="1888" max="2030" required> <!-- Example range -->
+                         <div class="error-message" id="yearError"></div>
+                    </div>
+                     <div class="form-group">
+                        <label for="releaseDate">Release Date <span style="color:red">*</span>:</label>
+                        <input type="date" id="releaseDate" name="releaseDate" required>
+                         <div class="error-message" id="releaseDateError"></div>
+                    </div>
+                     <div class="form-group">
+                        <label for="language">Language <span style="color:red">*</span>:</label>
+                        <input list="languages" id="language" name="language" required>
+                        <datalist id="languages">
+                            <option value="English">
+                            <option value="Spanish">
+                            <option value="French">
+                            <option value="German">
+                            <option value="Japanese">
+                            <option value="Other">
+                        </datalist>
+                         <div class="error-message" id="languageError"></div>
+                    </div>
+                     <div class="form-group">
+                        <label for="runtimeMinutes">Runtime (minutes) <span style="color:red">*</span>:</label>
+                        <input type="number" id="runtimeMinutes" name="runtimeMinutes" min="1" required>
+                         <div class="error-message" id="runtimeMinutesError"></div>
+                    </div>
+
+                     <!-- Optional Fields -->
+                     <div class="form-group">
+                        <label for="url">Movie URL:</label>
+                        <input type="url" id="url" name="url" placeholder="https://imdb.com/title/tt...">
+                         <div class="error-message" id="urlError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <textarea id="description" name="description"></textarea>
+                         <div class="error-message" id="descriptionError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="budget">Budget:</label>
+                        <input type="number" id="budget" name="budget" min="100000" step="0.01" placeholder="Minimum 100,000">
+                         <div class="error-message" id="budgetError"></div>
+                    </div>
+                     <div class="form-group">
+                        <label for="grossWorldwide">Gross Worldwide:</label>
+                        <input type="number" id="grossWorldwide" name="grossWorldwide" min="0" step="0.01" value="0"> <!-- Default 0 -->
+                         <div class="error-message" id="grossWorldwideError"></div>
+                    </div>
+                     <div class="form-group">
+                        <label for="genres">Genres (comma-separated):</label>
+                        <input list="genresList" id="genres" name="genres" placeholder="Action, Adventure, Sci-Fi">
+                         <datalist id="genresList">
+                            <option value="Action">
+                            <option value="Adventure">
+                            <option value="Animation">
+                            <option value="Comedy">
+                            <option value="Crime">
+                            <option value="Documentary">
+                            <option value="Drama">
+                            <option value="Family">
+                            <option value="Fantasy">
+                            <option value="History">
+                            <option value="Horror">
+                            <option value="Music">
+                            <option value="Mystery">
+                            <option value="Romance">
+                            <option value="Science Fiction">
+                            <option value="Thriller">
+                            <option value="War">
+                            <option value="Western">
+                        </datalist>
+                         <div class="error-message" id="genresError"></div>
+                    </div>
+                     <div class="form-group">
+                        <label for="isAdult">Is Adult:</label>
+                        <input type="checkbox" id="isAdult" name="isAdult"> <!-- Default false -->
+                    </div>
+                     <div class="form-group">
+                        <label for="averageRating">Average Rating:</label>
+                        <input type="number" id="averageRating" name="averageRating" min="0" max="10" step="0.1" value="0"> <!-- Default 0 -->
+                         <div class="error-message" id="averageRatingError"></div>
+                    </div>
+                     <div class="form-group">
+                        <label for="numVotes">Number of Votes:</label>
+                        <input type="number" id="numVotes" name="numVotes" min="0" value="0"> <!-- Default 0 -->
+                         <div class="error-message" id="numVotesError"></div>
+                    </div>
+
+                    <!-- Submission -->
+                    <div class="form-group">
+                        <button type="submit">Add Movie</button>
+                    </div>
+                     <div id="formStatusMessage" style="margin-top: 15px; text-align: center;"></div>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
