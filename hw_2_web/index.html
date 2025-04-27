@@ -8,24 +8,37 @@
 
     <link rel="stylesheet" href="./css/style3.css">
 
+    <script>
+        // Define API base URL globally
+        const apiUrlBase = "https://localhost:54200/api"; 
+    </script>
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous">
     </script>
     
+    <script src="./JS/auth.js"></script> <!-- Load auth.js first -->
     <script src="./JS/clientMethods.js"></script>
     <script>
-        $(document).ready(init);
+        $(document).ready(function() {
+            updateUserDisplay(); // Update UI based on login status
+            init(); // Initialize movie loading etc. from clientMethods.js
+        });
     </script>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Movies</h1>
+            <div id="userInfo" style="float: right; margin: 10px; display: none;"></div>
             <nav>
                 <ul class="nav-list">
                     <li><a href="index.html" class="styled-button">Home</a></li>
-                    <li><a href="MyMovies.html" class="styled-button">My Collection</a></li>
+                    <li><a id="myCollectionLink" href="MyMovies.html" class="styled-button">My Collection</a></li>
+                    <li><a id="addMovieLink" href="addMovie.html" class="styled-button" style="display: none;">Add Movie</a></li>
+                    <li><a id="loginLink" href="login.html" class="styled-button" style="display: none;">Login</a></li>
+                    <li><button id="logoutButton" class="styled-button" style="display: none; background-color: #dc3545;">Logout</button></li>
                 </ul>
             </nav>
         </header>
