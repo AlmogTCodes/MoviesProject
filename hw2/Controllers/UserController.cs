@@ -54,15 +54,27 @@ namespace hw2.Controllers
                 return BadRequest(ModelState);
             }
 
+            // Explicitly check for empty/whitespace password BEFORE hashing
+            if (string.IsNullOrWhiteSpace(user.Password))
+            {
+                return BadRequest(new { message = "Password cannot be empty or whitespace." });
+            }
+
             // Hash the password before attempting to insert
             try
             {
                 user.Password = _passwordHashingService.CreatePasswordHash(user.Password);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException ex) // Keep catch for other potential hashing args errors
             {
-                // Handle cases like empty password from the hashing service
+                // Handle cases like empty password from the hashing service (though explicit check above should catch it)
                 return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex) // Catch broader exceptions just in case hashing fails unexpectedly
+            {
+                // Consider logging the exception ex
+                // Log.Error(ex, "Password hashing failed unexpectedly.");
+                return StatusCode(500, new { message = "An error occurred during password processing." });
             }
 
             // Ensure ID is 0 for insertion logic in User.Insert
